@@ -103,10 +103,6 @@ tailwind.config = {
 </script>
 <style>
 body { background-color: #F8FAFC; }
-.chart-placeholder {
-  background-image: radial-gradient(#e5eeff 1px, transparent 1px);
-  background-size: 8px 8px;
-}
 </style>
 </head>
 <body class="font-body-md text-body-md text-on-surface bg-background flex h-screen overflow-hidden">
@@ -134,7 +130,7 @@ body { background-color: #F8FAFC; }
     </a>
     <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
       <span class="material-symbols-outlined">smart_toy</span>
-      <span class="font-body-md">Agents</span>
+      <span class="font-body-md">Providers</span>
     </a>
     <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
       <span class="material-symbols-outlined">history</span>
@@ -158,7 +154,7 @@ body { background-color: #F8FAFC; }
   <div class="flex items-center gap-md">
     <div class="hidden md:flex items-center text-body-sm font-mono-data text-on-surface-variant bg-surface-container-low px-sm py-xs rounded border border-outline-variant">
       <span class="material-symbols-outlined text-[16px] mr-xs">calendar_today</span>
-      19 May - 9 Jul 2026
+      2026-05-19 - 2026-07-09
     </div>
     <div class="flex items-center gap-xs">
       <button class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low">
@@ -186,7 +182,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">input</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">18.5M</span>
+      <span class="font-stat-value text-stat-value text-primary">45.2M</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -195,7 +191,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">output</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">574.5K</span>
+      <span class="font-stat-value text-stat-value text-primary">877.2K</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -204,7 +200,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">storage</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">225.9M</span>
+      <span class="font-stat-value text-stat-value text-primary">243.7M</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -213,7 +209,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">forum</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">1,719</span>
+      <span class="font-stat-value text-stat-value text-primary">1,835</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -222,7 +218,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">payments</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">$0.00</span>
+      <span class="font-stat-value text-stat-value text-primary">$34.90</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -231,35 +227,46 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">analytics</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">11.1K</span>
+      <span class="font-stat-value text-stat-value text-primary">11.2K</span>
     </div>
   </div>
 </div>
 
+<!-- 9Router Summary -->
+
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
+            <div class="flex items-center gap-sm mb-sm">
+                <span class="material-symbols-outlined text-secondary text-[20px]">router</span>
+                <span class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider">9Router Summary</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+                <div><span class="text-on-surface-variant text-xs">Requests</span><div class="font-stat-value text-stat-value text-primary">476</div></div>
+                <div><span class="text-on-surface-variant text-xs">Input Tokens</span><div class="font-stat-value text-stat-value text-primary">25.3M</div></div>
+                <div><span class="text-on-surface-variant text-xs">Output Tokens</span><div class="font-stat-value text-stat-value text-primary">263.5K</div></div>
+                <div><span class="text-on-surface-variant text-xs">Cost</span><div class="font-stat-value text-stat-value text-primary">$34.90</div></div>
+            </div>
+        </div>
+
 <!-- Charts Bento Grid -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-  <!-- Daily Usage (Line) - Spans 8 cols -->
   <div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col min-h-[300px]">
     <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Daily Usage</h3>
     <div class="flex-grow relative">
       <canvas id="dailyChart"></canvas>
     </div>
   </div>
-  <!-- Messages by Model (Doughnut) - Spans 4 cols -->
   <div class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col min-h-[300px]">
     <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Messages by Model</h3>
     <div class="flex-grow relative">
       <canvas id="modelCountChart"></canvas>
     </div>
   </div>
-  <!-- Token by Model (Bar) - Spans 4 cols -->
   <div class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col h-[250px]">
     <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Token by Model</h3>
     <div class="flex-grow relative">
       <canvas id="modelChart"></canvas>
     </div>
   </div>
-  <!-- Hourly Activity (Bar) - Spans 8 cols -->
   <div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col h-[250px]">
     <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Hourly Activity</h3>
     <div class="flex-grow relative">
@@ -270,7 +277,6 @@ body { background-color: #F8FAFC; }
 
 <!-- Tables Section -->
 <div class="flex flex-col gap-margin">
-  <!-- Model Breakdown Table -->
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
     <div class="p-md border-b border-outline-variant">
       <h3 class="font-headline-md text-headline-md font-bold text-primary">Model Breakdown</h3>
@@ -284,17 +290,127 @@ body { background-color: #F8FAFC; }
             <th class="p-sm text-right">Input</th>
             <th class="p-sm text-right">Output</th>
             <th class="p-sm text-right">Cache Read</th>
-            <th class="p-sm text-right">Cache Write</th>
-            <th class="p-sm text-right">Total</th>
             <th class="p-sm text-right pr-md">Cost</th>
           </tr>
         </thead>
-        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant" id="modelTableBody">
+        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant">
+          
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#00687a"></div>mimo-v2.5-pro</td>
+            <td class="p-sm text-right">1,328</td>
+            <td class="p-sm text-right">6.9M</td>
+            <td class="p-sm text-right">492.1K</td>
+            <td class="p-sm text-right">214.0M</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#57dffe"></div>deepseek-v4-pro</td>
+            <td class="p-sm text-right">73</td>
+            <td class="p-sm text-right">6.4M</td>
+            <td class="p-sm text-right">29.1K</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#00275b"></div>claude-opus-4-6-thinking</td>
+            <td class="p-sm text-right">27</td>
+            <td class="p-sm text-right">1.9M</td>
+            <td class="p-sm text-right">6.1K</td>
+            <td class="p-sm text-right">399.8K</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#004e5c"></div>mimo-auto</td>
+            <td class="p-sm text-right">257</td>
+            <td class="p-sm text-right">1.2M</td>
+            <td class="p-sm text-right">76.7K</td>
+            <td class="p-sm text-right">19.6M</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#dce9ff"></div>glm-5</td>
+            <td class="p-sm text-right">30</td>
+            <td class="p-sm text-right">1.2M</td>
+            <td class="p-sm text-right">871</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#c5c6cd"></div>glm-5.2</td>
+            <td class="p-sm text-right">10</td>
+            <td class="p-sm text-right">699.8K</td>
+            <td class="p-sm text-right">680</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#4cd7f6"></div>claude-sonnet-4-6</td>
+            <td class="p-sm text-right">11</td>
+            <td class="p-sm text-right">646.9K</td>
+            <td class="p-sm text-right">2.4K</td>
+            <td class="p-sm text-right">233.0K</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#adc6ff"></div>MiniMax-M2.7</td>
+            <td class="p-sm text-right">19</td>
+            <td class="p-sm text-right">475.7K</td>
+            <td class="p-sm text-right">4.8K</td>
+            <td class="p-sm text-right">208.8K</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#00687a"></div>qmodel_latest</td>
+            <td class="p-sm text-right">4</td>
+            <td class="p-sm text-right">187.8K</td>
+            <td class="p-sm text-right">104</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#57dffe"></div>deepseek-v4-pro-260425</td>
+            <td class="p-sm text-right">1</td>
+            <td class="p-sm text-right">111.8K</td>
+            <td class="p-sm text-right">304</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#00275b"></div>deepseek-3.2</td>
+            <td class="p-sm text-right">2</td>
+            <td class="p-sm text-right">66.1K</td>
+            <td class="p-sm text-right">313</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#004e5c"></div>claude-opus-4-8</td>
+            <td class="p-sm text-right">2</td>
+            <td class="p-sm text-right">41.2K</td>
+            <td class="p-sm text-right">119</td>
+            <td class="p-sm text-right">37.2K</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#dce9ff"></div>glm-5.2</td>
+            <td class="p-sm text-right">1</td>
+            <td class="p-sm text-right">19.0K</td>
+            <td class="p-sm text-right">58</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#c5c6cd"></div><synthetic></td>
+            <td class="p-sm text-right">70</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">$0.00</td>
+        </tr>
         </tbody>
       </table>
     </div>
   </div>
-  <!-- Top Sessions Table -->
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
     <div class="p-md border-b border-outline-variant">
       <h3 class="font-headline-md text-headline-md font-bold text-primary">Top Sessions</h3>
@@ -312,7 +428,98 @@ body { background-color: #F8FAFC; }
             <th class="p-sm text-right pr-md">Total</th>
           </tr>
         </thead>
-        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant" id="sessionTableBody">
+        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant">
+          
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#1</td>
+            <td class="p-sm text-secondary" title="hai hipsy, bantu aku fix error di automation threads post di n8n ku dong">hai hipsy, bantu aku fix error di automation threa...</td>
+            <td class="p-sm text-right">66</td>
+            <td class="p-sm text-right">7.4M</td>
+            <td class="p-sm text-right">33.0K</td>
+            <td class="p-sm text-right">265.4K</td>
+            <td class="p-sm text-right pr-md">7.4M</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#2</td>
+            <td class="p-sm text-secondary" title="tolong installin ini di cmd ku https://github.com/Andyyyy64/whichllm">tolong installin ini di cmd ku https://github.com/...</td>
+            <td class="p-sm text-right">100</td>
+            <td class="p-sm text-right">2.3M</td>
+            <td class="p-sm text-right">37.6K</td>
+            <td class="p-sm text-right">48.7M</td>
+            <td class="p-sm text-right pr-md">2.3M</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#3</td>
+            <td class="p-sm text-secondary" title="cek">cek</td>
+            <td class="p-sm text-right">124</td>
+            <td class="p-sm text-right">1.2M</td>
+            <td class="p-sm text-right">30.7K</td>
+            <td class="p-sm text-right">13.3M</td>
+            <td class="p-sm text-right pr-md">1.2M</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#4</td>
+            <td class="p-sm text-secondary" title="hai">hai</td>
+            <td class="p-sm text-right">120</td>
+            <td class="p-sm text-right">1.0M</td>
+            <td class="p-sm text-right">23.6K</td>
+            <td class="p-sm text-right">9.6M</td>
+            <td class="p-sm text-right pr-md">1.0M</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#5</td>
+            <td class="p-sm text-secondary" title="9Router - glm-5">9Router - glm-5</td>
+            <td class="p-sm text-right">19</td>
+            <td class="p-sm text-right">928.2K</td>
+            <td class="p-sm text-right">320</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">928.5K</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#6</td>
+            <td class="p-sm text-secondary" title="hai ingat sesi ini sebagain develop game escape campus ya, baca project ku dan pelajari semuanya dul">hai ingat sesi ini sebagain develop game escape ca...</td>
+            <td class="p-sm text-right">72</td>
+            <td class="p-sm text-right">852.7K</td>
+            <td class="p-sm text-right">20.0K</td>
+            <td class="p-sm text-right">20.2M</td>
+            <td class="p-sm text-right pr-md">872.7K</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#7</td>
+            <td class="p-sm text-secondary" title="tolong dong cek workflow n8n ku">tolong dong cek workflow n8n ku</td>
+            <td class="p-sm text-right">38</td>
+            <td class="p-sm text-right">824.1K</td>
+            <td class="p-sm text-right">13.4K</td>
+            <td class="p-sm text-right">12.7M</td>
+            <td class="p-sm text-right pr-md">837.5K</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#8</td>
+            <td class="p-sm text-secondary" title="coba kases vps ku">coba kases vps ku</td>
+            <td class="p-sm text-right">102</td>
+            <td class="p-sm text-right">678.8K</td>
+            <td class="p-sm text-right">12.7K</td>
+            <td class="p-sm text-right">6.7M</td>
+            <td class="p-sm text-right pr-md">691.4K</td>
+        </tr>
+        <tr class=" hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#9</td>
+            <td class="p-sm text-secondary" title="p">p</td>
+            <td class="p-sm text-right">12</td>
+            <td class="p-sm text-right">584.9K</td>
+            <td class="p-sm text-right">427</td>
+            <td class="p-sm text-right">0</td>
+            <td class="p-sm text-right pr-md">585.3K</td>
+        </tr>
+        <tr class="bg-surface hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md">#10</td>
+            <td class="p-sm text-secondary" title="Greeting">Greeting</td>
+            <td class="p-sm text-right">89</td>
+            <td class="p-sm text-right">397.5K</td>
+            <td class="p-sm text-right">39.4K</td>
+            <td class="p-sm text-right">7.4M</td>
+            <td class="p-sm text-right pr-md">436.9K</td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -321,9 +528,8 @@ body { background-color: #F8FAFC; }
 
 </div>
 
-<!-- Footer -->
 <footer class="bg-surface-container-lowest text-on-surface-variant font-mono-label text-mono-label border-t border-outline-variant flex justify-between items-center w-full px-lg py-md mt-margin">
-  <div>&copy; 2026 TokenPulse. Data from MiMo Code</div>
+  <div>&copy; 2026 TokenPulse. Data from MiMo Code + 9Router</div>
   <div class="flex gap-md">
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">Docs</span>
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">GitHub</span>
@@ -340,21 +546,19 @@ const fmtTokens = (n) => {
   return n.toString();
 };
 
-// Chart defaults
 Chart.defaults.color = '#45474c';
 Chart.defaults.borderColor = '#e5eeff';
 Chart.defaults.font.family = "'JetBrains Mono', monospace";
 Chart.defaults.font.size = 11;
 
-// === DAILY CHART ===
 new Chart(document.getElementById('dailyChart'), {
   type: 'line',
   data: {
-    labels: ["2026-05-19","2026-05-21","2026-05-22","2026-05-23","2026-05-24","2026-05-25","2026-05-26","2026-05-27","2026-05-28","2026-05-29","2026-05-30","2026-05-31","2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05","2026-06-06","2026-06-07","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12","2026-06-13","2026-06-14","2026-06-15","2026-06-16","2026-06-17","2026-06-18","2026-06-19","2026-06-20","2026-06-21","2026-06-25","2026-06-26","2026-06-27","2026-06-28","2026-06-30","2026-07-01","2026-07-02","2026-07-03","2026-07-04","2026-07-05","2026-07-06","2026-07-07","2026-07-08","2026-07-09"],
+    labels: ["2026-05-19", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09"],
     datasets: [
-      { label: 'Input', data: [5206,113513,203,18713,19550,14253,3468,39074,21138,18096,4287,10251,35274,58151,21590,281954,70299,30964,58047,116485,194945,73159,3510,217,54973,367455,312,1362241,76293,22787,163585,1303919,1108332,30568,242864,888180,590765,558,128886,787381,0,1893791,3090805,2606083,1815378,35760,703163], borderColor: '#00687a', backgroundColor: 'rgba(0,104,122,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-      { label: 'Output', data: [3316,18769,105,10659,4524,3692,2244,4101,4703,11525,1823,2487,5261,18103,9684,49555,9999,9883,14010,18931,29663,22740,1944,132,43971,34163,113,26074,25991,1802,8085,33460,14374,1418,14945,5860,5806,187,15329,11961,0,9019,19770,5427,1066,124,37665], borderColor: '#57dffe', backgroundColor: 'rgba(87,223,254,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-      { label: 'Cache Read', data: [1063552,5189696,105216,2256128,1445376,2182016,549952,2872448,3062976,4544576,1102016,1473856,3857856,10582464,1758016,6194688,1085632,788352,3698944,5026560,7021568,5399936,268672,85824,10020672,24336384,434304,4755776,11302528,1191424,2427904,27401280,30210240,290496,7947648,2236237,362755,29504,10871232,9180608,0,298259,0,0,0,84032,10869056], borderColor: '#00275b', backgroundColor: 'rgba(0,39,91,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Input', data: [5206, 113513, 203, 18713, 19550, 14253, 3468, 39074, 21138, 18096, 4287, 10251, 35274, 58151, 21590, 281954, 70299, 30964, 58047, 116485, 194945, 73159, 3510, 217, 54973, 367455, 312, 1362241, 76293, 22787, 163585, 1303919, 1108332, 30568, 242864, 888180, 590765, 558, 128886, 787381, 0, 1893791, 3090805, 2606083, 2743587, 35760, 1182599], borderColor: '#00687a', backgroundColor: 'rgba(0,104,122,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Output', data: [3316, 18769, 105, 10659, 4524, 3692, 2244, 4101, 4703, 11525, 1823, 2487, 5261, 18103, 9684, 49555, 9999, 9883, 14010, 18931, 29663, 22740, 1944, 132, 43971, 34163, 113, 26074, 25991, 1802, 8085, 33460, 14374, 1418, 14945, 5860, 5806, 187, 15329, 11961, 0, 9019, 19770, 5427, 1386, 124, 76644], borderColor: '#57dffe', backgroundColor: 'rgba(87,223,254,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Cache Read', data: [1063552, 5189696, 105216, 2256128, 1445376, 2182016, 549952, 2872448, 3062976, 4544576, 1102016, 1473856, 3857856, 10582464, 1758016, 6194688, 1085632, 788352, 3698944, 5026560, 7021568, 5399936, 268672, 85824, 10020672, 24336384, 434304, 4755776, 11302528, 1191424, 2427904, 27401280, 30210240, 290496, 7947648, 2236237, 362755, 29504, 10871232, 9180608, 0, 298259, 0, 0, 0, 84032, 19498048], borderColor: '#00275b', backgroundColor: 'rgba(0,39,91,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
     ]
   },
   options: {
@@ -369,40 +573,25 @@ new Chart(document.getElementById('dailyChart'), {
   }
 });
 
-// === MESSAGES BY MODEL (DOUGHNUT) ===
 new Chart(document.getElementById('modelCountChart'), {
   type: 'doughnut',
   data: {
-    labels: ["mimo-v2.5-pro","mimo-auto","deepseek-v4-pro","claude-opus-4-6","MiniMax-M2.7","Other"],
-    datasets: [{
-      data: [1328, 161, 73, 27, 19, 111],
-      backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'],
-      borderWidth: 2,
-      borderColor: '#ffffff'
-    }]
+    labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5", "Other"],
+    datasets: [{ data: [1328, 73, 27, 257, 30, 120], backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
     cutout: '60%',
-    plugins: {
-      legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, font: { size: 11 } } }
-    }
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 12, font: { size: 11 } } } }
   }
 });
 
-// === TOKEN BY MODEL (HORIZONTAL BAR) ===
 new Chart(document.getElementById('modelChart'), {
   type: 'bar',
   data: {
-    labels: ["mimo-v2.5-pro","deepseek-v4-pro","claude-opus-4-6","mimo-auto","glm-5.2","claude-sonnet-4-6","MiniMax-M2.7"],
-    datasets: [{
-      label: 'Tokens',
-      data: [7363557, 6465423, 1938698, 776712, 700492, 649311, 480447],
-      backgroundColor: '#00687a',
-      borderRadius: 4,
-      barThickness: 18
-    }]
+    labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5", "glm-5.2", "claude-sonnet-4-6", "MiniMax-M2.7"],
+    datasets: [{ label: 'Tokens', data: [7363557, 6465423, 1938698, 1276094, 1207062, 700492, 649311, 480447], backgroundColor: '#00687a', borderRadius: 4, barThickness: 18 }]
   },
   options: {
     responsive: true,
@@ -416,18 +605,11 @@ new Chart(document.getElementById('modelChart'), {
   }
 });
 
-// === HOURLY ACTIVITY (BAR) ===
 new Chart(document.getElementById('hourlyChart'), {
   type: 'bar',
   data: {
-    labels: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"],
-    datasets: [{
-      label: 'Messages',
-      data: [46,64,55,24,9,33,31,25,160,79,56,43,55,108,146,107,114,34,91,73,140,85,89,52],
-      backgroundColor: '#00687a',
-      borderRadius: 4,
-      barPercentage: 0.7
-    }]
+    labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
+    datasets: [{ label: 'Messages', data: [46, 64, 56, 24, 9, 33, 31, 25, 160, 175, 56, 43, 55, 108, 165, 107, 114, 34, 91, 73, 140, 85, 89, 52], backgroundColor: '#00687a', borderRadius: 4, barPercentage: 0.7 }]
   },
   options: {
     responsive: true,
@@ -438,72 +620,6 @@ new Chart(document.getElementById('hourlyChart'), {
       y: { ticks: { callback: v => fmtTokens(v) }, grid: { color: '#e5eeff' } }
     }
   }
-});
-
-// === MODEL TABLE ===
-const modelData = [
-  { name: "mimo-v2.5-pro", msgs: 1328, input: 6871418, output: 492139, cacheRead: 214034816, cacheWrite: 0, cost: 0 },
-  { name: "deepseek-v4-pro", msgs: 73, input: 6436280, output: 29143, cacheRead: 0, cacheWrite: 0, cost: 0 },
-  { name: "claude-opus-4-6-thinking", msgs: 27, input: 1932587, output: 6111, cacheRead: 399756, cacheWrite: 0, cost: 0 },
-  { name: "mimo-auto", msgs: 161, input: 738923, output: 37789, cacheRead: 10953088, cacheWrite: 0, cost: 0 },
-  { name: "glm-5.2", msgs: 10, input: 699812, output: 680, cacheRead: 0, cacheWrite: 0, cost: 0 },
-  { name: "claude-sonnet-4-6", msgs: 11, input: 646881, output: 2430, cacheRead: 233035, cacheWrite: 0, cost: 0 },
-  { name: "MiniMax-M2.7", msgs: 19, input: 475667, output: 4780, cacheRead: 208757, cacheWrite: 157800, cost: 0 },
-  { name: "glm-5", msgs: 11, input: 277982, output: 551, cacheRead: 0, cacheWrite: 0, cost: 0 },
-  { name: "qmodel_latest", msgs: 4, input: 187823, output: 104, cacheRead: 0, cacheWrite: 0, cost: 0 },
-  { name: "deepseek-v4-pro-260425", msgs: 1, input: 111768, output: 304, cacheRead: 0, cacheWrite: 0, cost: 0 },
-  { name: "deepseek-3.2", msgs: 2, input: 66088, output: 313, cacheRead: 0, cacheWrite: 0, cost: 0 },
-  { name: "claude-opus-4-8", msgs: 2, input: 41197, output: 119, cacheRead: 37207, cacheWrite: 0, cost: 0 },
-];
-
-const modelColors = ['#00687a','#57dffe','#00275b','#004e5c','#dce9ff','#c5c6cd','#4cd7f6'];
-const modelTbody = document.getElementById('modelTableBody');
-modelData.forEach((m, i) => {
-  const total = m.input + m.output;
-  const row = document.createElement('tr');
-  row.className = i % 2 === 1 ? 'bg-surface hover:bg-surface-container-low transition-colors' : 'hover:bg-surface-container-low transition-colors';
-  row.innerHTML = `
-    <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:${modelColors[i % modelColors.length]}"></div>${m.name}</td>
-    <td class="p-sm text-right">${m.msgs.toLocaleString()}</td>
-    <td class="p-sm text-right">${fmtTokens(m.input)}</td>
-    <td class="p-sm text-right">${fmtTokens(m.output)}</td>
-    <td class="p-sm text-right">${fmtTokens(m.cacheRead)}</td>
-    <td class="p-sm text-right">${fmtTokens(m.cacheWrite)}</td>
-    <td class="p-sm text-right">${fmtTokens(total)}</td>
-    <td class="p-sm text-right pr-md">$${m.cost.toFixed(2)}</td>
-  `;
-  modelTbody.appendChild(row);
-});
-
-// === SESSION TABLE ===
-const sessionData = [
-  { title: "hai hipsy, bantu aku fix error di automation threads post di n8n ku dong", msgs: 66, input: 7367000, output: 33000, cacheRead: 265400, total: 7400000 },
-  { title: "tolong installin ini di cmd ku https://github.com/Andyyyy64/whichllm", msgs: 100, input: 2277000, output: 37600, cacheRead: 48700000, total: 2314600 },
-  { title: "cek", msgs: 124, input: 1178000, output: 30700, cacheRead: 13300000, total: 1208700 },
-  { title: "hai", msgs: 120, input: 1012000, output: 23600, cacheRead: 9600000, total: 1035600 },
-  { title: "hai ingat sesi ini sebagain develop game escape campus ya", msgs: 72, input: 852700, output: 20000, cacheRead: 20200000, total: 872700 },
-  { title: "tolong dong cek workflow n8n ku", msgs: 38, input: 824100, output: 13400, cacheRead: 12700000, total: 837500 },
-  { title: "coba kases vps ku", msgs: 97, input: 670800, output: 11400, cacheRead: 6200000, total: 682200 },
-  { title: "p", msgs: 12, input: 584900, output: 427, cacheRead: 0, total: 585327 },
-  { title: "kamu sudah paham kan ini project apa?", msgs: 173, input: 351000, output: 31300, cacheRead: 19600000, total: 382300 },
-  { title: "aku mau nambahin biar orang bisa download cv ku bagusnya ditaro di mana yah", msgs: 9, input: 326400, output: 487, cacheRead: 0, total: 326887 },
-];
-
-const sessionTbody = document.getElementById('sessionTableBody');
-sessionData.forEach((s, i) => {
-  const truncTitle = s.title.length > 50 ? s.title.substring(0, 50) + '...' : s.title;
-  const row = document.createElement('tr');
-  row.className = i % 2 === 1 ? 'bg-surface hover:bg-surface-container-low transition-colors' : 'hover:bg-surface-container-low transition-colors';
-  row.innerHTML = `
-    <td class="p-sm pl-md">#${i + 1}</td>
-    <td class="p-sm text-secondary" title="${s.title}">${truncTitle}</td>
-    <td class="p-sm text-right">${s.msgs}</td>
-    <td class="p-sm text-right">${fmtTokens(s.input)}</td>
-    <td class="p-sm text-right">${fmtTokens(s.output)}</td>
-    <td class="p-sm text-right">${fmtTokens(s.cacheRead)}</td>
-    <td class="p-sm text-right pr-md">${fmtTokens(s.total)}</td>
-  `;
-  sessionTbody.appendChild(row);
 });
 </script>
 

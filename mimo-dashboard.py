@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
-"""Generate TokenPulse Dashboard as a self-contained HTML file."""
+"""Generate TokenPulse Dashboard as a self-contained HTML file.
+Reads from MiMo Code SQLite database AND 9Router API."""
 
 import sqlite3
 import json
 import os
+import urllib.request
+import urllib.parse
 from datetime import datetime
 from collections import defaultdict
 
 DB_PATH = os.path.expanduser("~/.local/share/mimocode/mimocode.db")
+ROUTER_URL = "http://localhost:20128"
+ROUTER_PASSWORD = "123456"
 OUTPUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mimo-token-dashboard.html")
 
 
-def fetch_data(db_path):
+def fetch_mimo_data(db_path):
+    """Fetch token usage data from MiMo Code SQLite database."""
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -40,12 +46,9 @@ def fetch_data(db_path):
                 messages.append({
                     "date": dt.strftime("%Y-%m-%d"),
                     "hour": dt.hour,
-                    "day_of_week": dt.strftime("%A"),
                     "model": data.get("modelID", "unknown"),
                     "provider": data.get("providerID", "unknown"),
-                    "agent": row["agent_id"],
                     "session_title": row["session_title"] or "Untitled",
-                    "session_dir": row["session_dir"] or "",
                     "input_tokens": tokens.get("input", 0),
                     "output_tokens": tokens.get("output", 0),
                     "reasoning_tokens": tokens.get("reasoning", 0),
@@ -60,10 +63,78 @@ def fetch_data(db_path):
     return messages
 
 
+def fetch_9router_data():
+    """Fetch token usage data from 9Router API."""
+    try:
+        # Login
+        login_data = json.dumps({"password": ROUTER_PASSWORD}).encode("utf-8")
+        login_req = urllib.request.Request(
+            f"{ROUTER_URL}/api/auth/login",
+            data=login_data,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        login_resp = urllib.request.urlopen(login_req)
+        cookies = login_resp.headers.get_all("Set-Cookie") or []
+
+        # Get session cookie
+        cookie_str = "; ".join(c.split(";")[0] for c in cookies) if cookies else ""
+
+        # Fetch usage stats
+        stats_req = urllib.request.Request(
+            f"{ROUTER_URL}/api/usage/stats?period=60d",
+            headers={"Cookie": cookie_str, "Content-Type": "application/json"}
+        )
+        stats_resp = urllib.request.urlopen(stats_req)
+        stats = json.loads(stats_resp.read().decode("utf-8"))
+
+        return stats
+    except Exception as e:
+        print(f"Warning: Could not fetch 9Router data: {e}")
+        return None
+
+
+def merge_data(mimo_messages, router_stats):
+    """Merge MiMo Code and 9Router data into unified format."""
+    all_messages = list(mimo_messages)
+
+    # Add 9Router recent requests as messages
+    if router_stats and "recentRequests" in router_stats:
+        for req in router_stats["recentRequests"]:
+            try:
+                dt = datetime.fromisoformat(req["timestamp"].replace("Z", "+00:00"))
+                all_messages.append({
+                    "date": dt.strftime("%Y-%m-%d"),
+                    "hour": dt.hour,
+                    "model": req.get("model", "unknown"),
+                    "provider": req.get("provider", "9router"),
+                    "session_title": f"9Router - {req.get('model', 'unknown')}",
+                    "input_tokens": req.get("promptTokens", 0),
+                    "output_tokens": req.get("completionTokens", 0),
+                    "reasoning_tokens": 0,
+                    "cache_read": req.get("cachedTokens", 0),
+                    "cache_write": 0,
+                    "cost": 0,
+                })
+            except (ValueError, KeyError):
+                continue
+
+    # Add 9Router aggregated by-model data
+    if router_stats and "byModel" in router_stats:
+        for model_key, model_data in router_stats["byModel"].items():
+            raw_model = model_data.get("rawModel", model_key)
+            provider = model_data.get("provider", "9router")
+            # Add aggregated counts (these are already in recentRequests, so skip)
+            # The recentRequests are the most recent 20, we'll use those
+
+    return all_messages
+
+
 def aggregate(messages):
-    daily = defaultdict(lambda: {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0, "count": 0, "cost": 0})
-    model = defaultdict(lambda: {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0, "count": 0, "cost": 0})
+    daily = defaultdict(lambda: {"input": 0, "output": 0, "cache_read": 0, "count": 0, "cost": 0})
+    model = defaultdict(lambda: {"input": 0, "output": 0, "cache_read": 0, "count": 0, "cost": 0})
     hourly = defaultdict(lambda: {"count": 0, "tokens": 0})
+    provider = defaultdict(lambda: {"input": 0, "output": 0, "count": 0, "cost": 0})
     session = defaultdict(lambda: {"title": "", "count": 0, "input": 0, "output": 0, "cache_read": 0})
 
     for m in messages:
@@ -71,7 +142,6 @@ def aggregate(messages):
         daily[d]["input"] += m["input_tokens"]
         daily[d]["output"] += m["output_tokens"]
         daily[d]["cache_read"] += m["cache_read"]
-        daily[d]["cache_write"] += m["cache_write"]
         daily[d]["count"] += 1
         daily[d]["cost"] += m["cost"]
 
@@ -79,12 +149,17 @@ def aggregate(messages):
         model[mod]["input"] += m["input_tokens"]
         model[mod]["output"] += m["output_tokens"]
         model[mod]["cache_read"] += m["cache_read"]
-        model[mod]["cache_write"] += m["cache_write"]
         model[mod]["count"] += 1
         model[mod]["cost"] += m["cost"]
 
         hourly[m["hour"]]["count"] += 1
         hourly[m["hour"]]["tokens"] += m["input_tokens"] + m["output_tokens"]
+
+        prov = m["provider"]
+        provider[prov]["input"] += m["input_tokens"]
+        provider[prov]["output"] += m["output_tokens"]
+        provider[prov]["count"] += 1
+        provider[prov]["cost"] += m["cost"]
 
         sid = m["session_title"]
         session[sid]["title"] = sid
@@ -93,7 +168,7 @@ def aggregate(messages):
         session[sid]["output"] += m["output_tokens"]
         session[sid]["cache_read"] += m["cache_read"]
 
-    return daily, model, hourly, session
+    return daily, model, hourly, provider, session
 
 
 def fmt_tokens(n):
@@ -104,17 +179,21 @@ def fmt_tokens(n):
     return str(n)
 
 
-def generate_html(messages, daily, model, hourly, session):
-    # Totals
+def generate_html(messages, daily, model, hourly, provider, session, router_stats):
     total_input = sum(m["input_tokens"] for m in messages)
     total_output = sum(m["output_tokens"] for m in messages)
     total_cache_read = sum(m["cache_read"] for m in messages)
-    total_cache_write = sum(m["cache_write"] for m in messages)
     total_cost = sum(m["cost"] for m in messages)
     total_messages = len(messages)
     avg_tokens = (total_input + total_output) // total_messages if total_messages else 0
 
-    # Dates sorted
+    # Add 9Router aggregated totals (not just recent requests)
+    if router_stats:
+        total_input += router_stats.get("totalPromptTokens", 0)
+        total_output += router_stats.get("totalCompletionTokens", 0)
+        total_cache_read += router_stats.get("totalCachedTokens", 0)
+        total_cost += router_stats.get("totalCost", 0)
+
     dates = sorted(daily.keys())
     if dates:
         first_date = dates[0]
@@ -122,31 +201,31 @@ def generate_html(messages, daily, model, hourly, session):
     else:
         first_date = last_date = "N/A"
 
-    # Daily chart data
     daily_dates = json.dumps(dates)
     daily_input = json.dumps([daily[d]["input"] for d in dates])
     daily_output = json.dumps([daily[d]["output"] for d in dates])
     daily_cache_read = json.dumps([daily[d]["cache_read"] for d in dates])
 
-    # Model chart data (sorted by total tokens, top 7 for bar chart)
     model_names_sorted = sorted(model.keys(), key=lambda x: model[x]["input"] + model[x]["output"], reverse=True)
-    top_models_bar = model_names_sorted[:7]
+    top_models_bar = model_names_sorted[:8]
     model_bar_labels = json.dumps([n.split("/")[-1] if "/" in n else n for n in top_models_bar])
     model_bar_data = json.dumps([model[n]["input"] + model[n]["output"] for n in top_models_bar])
 
-    # Model doughnut data (top 5 + Other)
     top5_models = model_names_sorted[:5]
     other_count = sum(model[n]["count"] for n in model_names_sorted[5:])
     doughnut_labels = json.dumps([n.split("/")[-1] if "/" in n else n for n in top5_models] + ["Other"])
     doughnut_data = json.dumps([model[n]["count"] for n in top5_models] + [other_count])
 
-    # Hourly chart
     hourly_labels = json.dumps([f"{h:02d}:00" for h in range(24)])
     hourly_counts = json.dumps([hourly[h]["count"] for h in range(24)])
 
-    # Top model rows
+    # Provider breakdown for chart
+    provider_names_sorted = sorted(provider.keys(), key=lambda x: provider[x]["input"] + provider[x]["output"], reverse=True)
+    provider_labels = json.dumps(provider_names_sorted[:8])
+    provider_data = json.dumps([provider[p]["input"] + provider[p]["output"] for p in provider_names_sorted[:8]])
+
     model_rows = ""
-    model_colors = ["#00687a", "#57dffe", "#00275b", "#004e5c", "#dce9ff", "#c5c6cd", "#4cd7f6"]
+    model_colors = ["#00687a", "#57dffe", "#00275b", "#004e5c", "#dce9ff", "#c5c6cd", "#4cd7f6", "#adc6ff"]
     for i, n in enumerate(model_names_sorted):
         m = model[n]
         total = m["input"] + m["output"]
@@ -160,12 +239,9 @@ def generate_html(messages, daily, model, hourly, session):
             <td class="p-sm text-right">{fmt_tokens(m['input'])}</td>
             <td class="p-sm text-right">{fmt_tokens(m['output'])}</td>
             <td class="p-sm text-right">{fmt_tokens(m['cache_read'])}</td>
-            <td class="p-sm text-right">{fmt_tokens(m['cache_write'])}</td>
-            <td class="p-sm text-right">{fmt_tokens(total)}</td>
             <td class="p-sm text-right pr-md">${m['cost']:.2f}</td>
         </tr>"""
 
-    # Top sessions
     top_sessions = sorted(session.values(), key=lambda x: x["input"] + x["output"], reverse=True)[:10]
     session_rows = ""
     for i, s in enumerate(top_sessions):
@@ -184,6 +260,23 @@ def generate_html(messages, daily, model, hourly, session):
         </tr>"""
 
     date_range = f"{first_date} - {last_date}"
+
+    # 9Router summary
+    router_summary = ""
+    if router_stats:
+        router_summary = f"""
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md">
+            <div class="flex items-center gap-sm mb-sm">
+                <span class="material-symbols-outlined text-secondary text-[20px]">router</span>
+                <span class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider">9Router Summary</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+                <div><span class="text-on-surface-variant text-xs">Requests</span><div class="font-stat-value text-stat-value text-primary">{router_stats.get('totalRequests', 0):,}</div></div>
+                <div><span class="text-on-surface-variant text-xs">Input Tokens</span><div class="font-stat-value text-stat-value text-primary">{fmt_tokens(router_stats.get('totalPromptTokens', 0))}</div></div>
+                <div><span class="text-on-surface-variant text-xs">Output Tokens</span><div class="font-stat-value text-stat-value text-primary">{fmt_tokens(router_stats.get('totalCompletionTokens', 0))}</div></div>
+                <div><span class="text-on-surface-variant text-xs">Cost</span><div class="font-stat-value text-stat-value text-primary">${router_stats.get('totalCost', 0):.2f}</div></div>
+            </div>
+        </div>"""
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -317,7 +410,7 @@ body {{ background-color: #F8FAFC; }}
     </a>
     <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
       <span class="material-symbols-outlined">smart_toy</span>
-      <span class="font-body-md">Agents</span>
+      <span class="font-body-md">Providers</span>
     </a>
     <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
       <span class="material-symbols-outlined">history</span>
@@ -419,6 +512,9 @@ body {{ background-color: #F8FAFC; }}
   </div>
 </div>
 
+<!-- 9Router Summary -->
+{router_summary}
+
 <!-- Charts Bento Grid -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
   <div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col min-h-[300px]">
@@ -462,8 +558,6 @@ body {{ background-color: #F8FAFC; }}
             <th class="p-sm text-right">Input</th>
             <th class="p-sm text-right">Output</th>
             <th class="p-sm text-right">Cache Read</th>
-            <th class="p-sm text-right">Cache Write</th>
-            <th class="p-sm text-right">Total</th>
             <th class="p-sm text-right pr-md">Cost</th>
           </tr>
         </thead>
@@ -501,7 +595,7 @@ body {{ background-color: #F8FAFC; }}
 </div>
 
 <footer class="bg-surface-container-lowest text-on-surface-variant font-mono-label text-mono-label border-t border-outline-variant flex justify-between items-center w-full px-lg py-md mt-margin">
-  <div>&copy; 2026 TokenPulse. Data from MiMo Code</div>
+  <div>&copy; 2026 TokenPulse. Data from MiMo Code + 9Router</div>
   <div class="flex gap-md">
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">Docs</span>
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">GitHub</span>
@@ -601,19 +695,26 @@ new Chart(document.getElementById('hourlyChart'), {{
 
 
 def main():
-    print("Fetching data from database...")
-    messages = fetch_data(DB_PATH)
-    print(f"Found {len(messages)} messages with token data")
+    print("Fetching MiMo Code data from database...")
+    mimo_messages = fetch_mimo_data(DB_PATH)
+    print(f"Found {len(mimo_messages)} messages from MiMo Code")
 
-    if not messages:
-        print("No token data found!")
-        return
+    print("Fetching 9Router data from API...")
+    router_stats = fetch_9router_data()
+    if router_stats:
+        print(f"9Router: {router_stats.get('totalRequests', 0)} requests, {router_stats.get('totalPromptTokens', 0):,} input tokens")
+    else:
+        print("9Router data not available")
+
+    print("Merging data...")
+    all_messages = merge_data(mimo_messages, router_stats)
+    print(f"Total messages: {len(all_messages)}")
 
     print("Aggregating data...")
-    daily, model, hourly, session = aggregate(messages)
+    daily, model, hourly, provider, session = aggregate(all_messages)
 
     print("Generating HTML dashboard...")
-    html = generate_html(messages, daily, model, hourly, session)
+    html = generate_html(all_messages, daily, model, hourly, provider, session, router_stats)
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)
