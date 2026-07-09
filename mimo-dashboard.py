@@ -242,6 +242,23 @@ def generate_html(messages, daily, model, hourly, provider, session, router_stat
             <td class="p-sm text-right pr-md">${m['cost']:.2f}</td>
         </tr>"""
 
+    # Provider table rows
+    provider_rows = ""
+    provider_colors = ["#00687a", "#57dffe", "#00275b", "#004e5c", "#dce9ff", "#c5c6cd", "#4cd7f6", "#adc6ff"]
+    for i, n in enumerate(provider_names_sorted):
+        p = provider[n]
+        total = p["input"] + p["output"]
+        bg = "bg-surface" if i % 2 == 1 else ""
+        color = provider_colors[i % len(provider_colors)]
+        provider_rows += f"""
+        <tr class="{bg} hover:bg-surface-container-low transition-colors">
+            <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:{color}"></div>{n}</td>
+            <td class="p-sm text-right">{p['count']:,}</td>
+            <td class="p-sm text-right">{fmt_tokens(p['input'])}</td>
+            <td class="p-sm text-right">{fmt_tokens(p['output'])}</td>
+            <td class="p-sm text-right pr-md">${p['cost']:.2f}</td>
+        </tr>"""
+
     top_sessions = sorted(session.values(), key=lambda x: x["input"] + x["output"], reverse=True)[:10]
     session_rows = ""
     for i, s in enumerate(top_sessions):
@@ -400,19 +417,19 @@ body {{ background-color: #F8FAFC; }}
     <div class="text-body-sm font-body-sm text-on-surface-variant">v1.0.0</div>
   </div>
   <div class="flex flex-col gap-xs flex-grow">
-    <a class="flex items-center gap-sm px-md py-sm bg-secondary-container text-on-secondary-container rounded-xl opacity-90" href="#">
+    <a onclick="switchTab('overview')" class="nav-link active flex items-center gap-sm px-md py-sm bg-secondary-container text-on-secondary-container rounded-xl opacity-90 cursor-pointer" data-tab="overview">
       <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
       <span class="font-body-md">Overview</span>
     </a>
-    <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
+    <a onclick="switchTab('models')" class="nav-link flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200 cursor-pointer" data-tab="models">
       <span class="material-symbols-outlined">extension</span>
       <span class="font-body-md">Models</span>
     </a>
-    <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
+    <a onclick="switchTab('providers')" class="nav-link flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200 cursor-pointer" data-tab="providers">
       <span class="material-symbols-outlined">smart_toy</span>
       <span class="font-body-md">Providers</span>
     </a>
-    <a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200" href="#">
+    <a onclick="switchTab('sessions')" class="nav-link flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors duration-200 cursor-pointer" data-tab="sessions">
       <span class="material-symbols-outlined">history</span>
       <span class="font-body-md">Sessions</span>
     </a>
@@ -454,6 +471,8 @@ body {{ background-color: #F8FAFC; }}
 <main class="flex-grow overflow-y-auto p-lg md:p-margin bg-background">
 <div class="max-w-[1440px] mx-auto flex flex-col gap-margin">
 
+<!-- Overview Tab -->
+<div id="tab-overview" class="tab-content">
 <!-- Stat Cards Grid -->
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-md">
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -591,6 +610,106 @@ body {{ background-color: #F8FAFC; }}
     </div>
   </div>
 </div>
+</div> <!-- End Overview Tab -->
+
+<!-- Models Tab -->
+<div id="tab-models" class="tab-content hidden">
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+    <div class="p-md border-b border-outline-variant">
+      <h3 class="font-headline-md text-headline-md font-bold text-primary">All Models</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-surface-container-low font-mono-label text-mono-label text-on-surface-variant uppercase border-b border-outline-variant">
+          <tr>
+            <th class="p-sm pl-md">Model</th>
+            <th class="p-sm text-right">Messages</th>
+            <th class="p-sm text-right">Input</th>
+            <th class="p-sm text-right">Output</th>
+            <th class="p-sm text-right">Cache Read</th>
+            <th class="p-sm text-right">Total</th>
+            <th class="p-sm text-right pr-md">Cost</th>
+          </tr>
+        </thead>
+        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant">
+          {model_rows}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter mt-margin">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col h-[350px]">
+      <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Token Distribution by Model</h3>
+      <div class="flex-grow relative">
+        <canvas id="modelDetailChart"></canvas>
+      </div>
+    </div>
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col h-[350px]">
+      <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Message Count by Model</h3>
+      <div class="flex-grow relative">
+        <canvas id="modelMessageChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Providers Tab -->
+<div id="tab-providers" class="tab-content hidden">
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+    <div class="p-md border-b border-outline-variant">
+      <h3 class="font-headline-md text-headline-md font-bold text-primary">All Providers</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-surface-container-low font-mono-label text-mono-label text-on-surface-variant uppercase border-b border-outline-variant">
+          <tr>
+            <th class="p-sm pl-md">Provider</th>
+            <th class="p-sm text-right">Requests</th>
+            <th class="p-sm text-right">Input</th>
+            <th class="p-sm text-right">Output</th>
+            <th class="p-sm text-right pr-md">Cost</th>
+          </tr>
+        </thead>
+        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant">
+          {provider_rows}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="mt-margin bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col h-[350px]">
+    <h3 class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider mb-md">Token Usage by Provider</h3>
+    <div class="flex-grow relative">
+      <canvas id="providerChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Sessions Tab -->
+<div id="tab-sessions" class="tab-content hidden">
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+    <div class="p-md border-b border-outline-variant">
+      <h3 class="font-headline-md text-headline-md font-bold text-primary">All Sessions</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-surface-container-low font-mono-label text-mono-label text-on-surface-variant uppercase border-b border-outline-variant">
+          <tr>
+            <th class="p-sm pl-md">Rank</th>
+            <th class="p-sm">Session</th>
+            <th class="p-sm text-right">Messages</th>
+            <th class="p-sm text-right">Input</th>
+            <th class="p-sm text-right">Output</th>
+            <th class="p-sm text-right">Cache Read</th>
+            <th class="p-sm text-right pr-md">Total</th>
+          </tr>
+        </thead>
+        <tbody class="font-mono-data text-mono-data text-primary divide-y divide-outline-variant">
+          {session_rows}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 </div>
 
@@ -606,6 +725,30 @@ body {{ background-color: #F8FAFC; }}
 </div>
 
 <script>
+// Tab switching
+function switchTab(tabName) {{
+  // Hide all tab content
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  // Show selected tab
+  document.getElementById('tab-' + tabName).classList.remove('hidden');
+  // Update nav links
+  document.querySelectorAll('.nav-link').forEach(el => {{
+    el.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'opacity-90');
+    el.classList.add('text-on-surface-variant');
+    const icon = el.querySelector('.material-symbols-outlined');
+    if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+  }});
+  const activeLink = document.querySelector(`[data-tab="${{tabName}}"]`);
+  if (activeLink) {{
+    activeLink.classList.add('bg-secondary-container', 'text-on-secondary-container', 'opacity-90');
+    activeLink.classList.remove('text-on-surface-variant');
+    const icon = activeLink.querySelector('.material-symbols-outlined');
+    if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+  }}
+  // Resize charts in the active tab
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+}}
+
 const fmtTokens = (n) => {{
   if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
   if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
@@ -684,6 +827,65 @@ new Chart(document.getElementById('hourlyChart'), {{
     scales: {{
       x: {{ grid: {{ display: false }} }},
       y: {{ ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: '#e5eeff' }} }}
+    }}
+  }}
+}});
+
+// Model Detail Chart (Horizontal Bar - Input vs Output)
+new Chart(document.getElementById('modelDetailChart'), {{
+  type: 'bar',
+  data: {{
+    labels: {model_bar_labels},
+    datasets: [
+      {{ label: 'Input', data: {json.dumps([model[n]["input"] for n in top_models_bar])}, backgroundColor: '#00687a', borderRadius: 4 }},
+      {{ label: 'Output', data: {json.dumps([model[n]["output"] for n in top_models_bar])}, backgroundColor: '#57dffe', borderRadius: 4 }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {{ legend: {{ position: 'top', labels: {{ usePointStyle: true, pointStyle: 'circle', padding: 12 }} }} }},
+    scales: {{
+      x: {{ stacked: true, ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: '#e5eeff' }} }},
+      y: {{ stacked: true, grid: {{ display: false }} }}
+    }}
+  }}
+}});
+
+// Model Message Count Chart (Doughnut)
+new Chart(document.getElementById('modelMessageChart'), {{
+  type: 'doughnut',
+  data: {{
+    labels: {doughnut_labels},
+    datasets: [{{ data: {doughnut_data}, backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }}]
+  }},
+  options: {{
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {{ legend: {{ position: 'right', labels: {{ usePointStyle: true, pointStyle: 'circle', padding: 10, font: {{ size: 11 }} }} }} }}
+  }}
+}});
+
+// Provider Chart (Horizontal Bar)
+new Chart(document.getElementById('providerChart'), {{
+  type: 'bar',
+  data: {{
+    labels: {provider_labels},
+    datasets: [
+      {{ label: 'Input', data: {json.dumps([provider[p]["input"] for p in provider_names_sorted[:8]])}, backgroundColor: '#00687a', borderRadius: 4 }},
+      {{ label: 'Output', data: {json.dumps([provider[p]["output"] for p in provider_names_sorted[:8]])}, backgroundColor: '#57dffe', borderRadius: 4 }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {{ legend: {{ position: 'top', labels: {{ usePointStyle: true, pointStyle: 'circle', padding: 12 }} }} }},
+    scales: {{
+      x: {{ stacked: true, ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: '#e5eeff' }} }},
+      y: {{ stacked: true, grid: {{ display: false }} }}
     }}
   }}
 }});
