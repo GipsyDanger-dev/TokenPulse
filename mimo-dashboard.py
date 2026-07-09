@@ -924,14 +924,16 @@ function updateChartColors() {{
 // Initial chart color update
 updateChartColors();
 
+const isDarkMode = document.documentElement.classList.contains('dark');
+
 new Chart(document.getElementById('dailyChart'), {{
   type: 'line',
   data: {{
     labels: {daily_dates},
     datasets: [
-      {{ label: 'Input', data: {daily_input}, borderColor: '#00687a', backgroundColor: 'rgba(0,104,122,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 }},
-      {{ label: 'Output', data: {daily_output}, borderColor: '#57dffe', backgroundColor: 'rgba(87,223,254,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 }},
-      {{ label: 'Cache Read', data: {daily_cache_read}, borderColor: '#00275b', backgroundColor: 'rgba(0,39,91,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 }},
+      {{ label: 'Input', data: {daily_input}, borderColor: isDarkMode ? '#22d3ee' : '#00687a', backgroundColor: isDarkMode ? 'rgba(34,211,238,0.15)' : 'rgba(0,104,122,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 }},
+      {{ label: 'Output', data: {daily_output}, borderColor: isDarkMode ? '#a5f3fc' : '#57dffe', backgroundColor: isDarkMode ? 'rgba(165,243,252,0.15)' : 'rgba(87,223,254,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 }},
+      {{ label: 'Cache Read', data: {daily_cache_read}, borderColor: isDarkMode ? '#818cf8' : '#00275b', backgroundColor: isDarkMode ? 'rgba(129,140,248,0.15)' : 'rgba(0,39,91,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 }},
     ]
   }},
   options: {{
@@ -950,7 +952,7 @@ new Chart(document.getElementById('modelCountChart'), {{
   type: 'doughnut',
   data: {{
     labels: {doughnut_labels},
-    datasets: [{{ data: {doughnut_data}, backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }}]
+    datasets: [{{ data: {doughnut_data}, backgroundColor: isDarkMode ? ['#22d3ee','#a5f3fc','#818cf8','#67e8f9','#06b6d4','#475569'] : ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: isDarkMode ? '#1e293b' : '#ffffff' }}]
   }},
   options: {{
     responsive: true,
@@ -964,7 +966,7 @@ new Chart(document.getElementById('modelChart'), {{
   type: 'bar',
   data: {{
     labels: {model_bar_labels},
-    datasets: [{{ label: 'Tokens', data: {model_bar_data}, backgroundColor: '#00687a', borderRadius: 4, barThickness: 18 }}]
+    datasets: [{{ label: 'Tokens', data: {model_bar_data}, backgroundColor: isDarkMode ? '#22d3ee' : '#00687a', borderRadius: 4, barThickness: 18 }}]
   }},
   options: {{
     responsive: true,
@@ -972,7 +974,7 @@ new Chart(document.getElementById('modelChart'), {{
     indexAxis: 'y',
     plugins: {{ legend: {{ display: false }} }},
     scales: {{
-      x: {{ ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: '#e5eeff' }} }},
+      x: {{ ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: isDarkMode ? '#334155' : '#e5eeff' }} }},
       y: {{ grid: {{ display: false }} }}
     }}
   }}
@@ -982,7 +984,7 @@ new Chart(document.getElementById('hourlyChart'), {{
   type: 'bar',
   data: {{
     labels: {hourly_labels},
-    datasets: [{{ label: 'Messages', data: {hourly_counts}, backgroundColor: '#00687a', borderRadius: 4, barPercentage: 0.7 }}]
+    datasets: [{{ label: 'Messages', data: {hourly_counts}, backgroundColor: isDarkMode ? '#22d3ee' : '#00687a', borderRadius: 4, barPercentage: 0.7 }}]
   }},
   options: {{
     responsive: true,
@@ -1001,8 +1003,8 @@ new Chart(document.getElementById('modelDetailChart'), {{
   data: {{
     labels: {model_bar_labels},
     datasets: [
-      {{ label: 'Input', data: {json.dumps([model[n]["input"] for n in top_models_bar])}, backgroundColor: '#00687a', borderRadius: 4 }},
-      {{ label: 'Output', data: {json.dumps([model[n]["output"] for n in top_models_bar])}, backgroundColor: '#57dffe', borderRadius: 4 }}
+      {{ label: 'Input', data: {json.dumps([model[n]["input"] for n in top_models_bar])}, backgroundColor: isDarkMode ? '#22d3ee' : '#00687a', borderRadius: 4 }},
+      {{ label: 'Output', data: {json.dumps([model[n]["output"] for n in top_models_bar])}, backgroundColor: isDarkMode ? '#a5f3fc' : '#57dffe', borderRadius: 4 }}
     ]
   }},
   options: {{
@@ -1011,7 +1013,7 @@ new Chart(document.getElementById('modelDetailChart'), {{
     indexAxis: 'y',
     plugins: {{ legend: {{ position: 'top', labels: {{ usePointStyle: true, pointStyle: 'circle', padding: 12 }} }} }},
     scales: {{
-      x: {{ stacked: true, ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: '#e5eeff' }} }},
+      x: {{ stacked: true, ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: isDarkMode ? '#334155' : '#e5eeff' }} }},
       y: {{ stacked: true, grid: {{ display: false }} }}
     }}
   }}
@@ -1022,7 +1024,7 @@ new Chart(document.getElementById('modelMessageChart'), {{
   type: 'doughnut',
   data: {{
     labels: {doughnut_labels},
-    datasets: [{{ data: {doughnut_data}, backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }}]
+    datasets: [{{ data: {doughnut_data}, backgroundColor: isDarkMode ? ['#22d3ee','#a5f3fc','#818cf8','#67e8f9','#06b6d4','#475569'] : ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: isDarkMode ? '#1e293b' : '#ffffff' }}]
   }},
   options: {{
     responsive: true,
@@ -1038,8 +1040,8 @@ new Chart(document.getElementById('providerChart'), {{
   data: {{
     labels: {provider_labels},
     datasets: [
-      {{ label: 'Input', data: {json.dumps([provider[p]["input"] for p in provider_names_sorted[:8]])}, backgroundColor: '#00687a', borderRadius: 4 }},
-      {{ label: 'Output', data: {json.dumps([provider[p]["output"] for p in provider_names_sorted[:8]])}, backgroundColor: '#57dffe', borderRadius: 4 }}
+      {{ label: 'Input', data: {json.dumps([provider[p]["input"] for p in provider_names_sorted[:8]])}, backgroundColor: isDarkMode ? '#22d3ee' : '#00687a', borderRadius: 4 }},
+      {{ label: 'Output', data: {json.dumps([provider[p]["output"] for p in provider_names_sorted[:8]])}, backgroundColor: isDarkMode ? '#a5f3fc' : '#57dffe', borderRadius: 4 }}
     ]
   }},
   options: {{
@@ -1048,7 +1050,7 @@ new Chart(document.getElementById('providerChart'), {{
     indexAxis: 'y',
     plugins: {{ legend: {{ position: 'top', labels: {{ usePointStyle: true, pointStyle: 'circle', padding: 12 }} }} }},
     scales: {{
-      x: {{ stacked: true, ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: '#e5eeff' }} }},
+      x: {{ stacked: true, ticks: {{ callback: v => fmtTokens(v) }}, grid: {{ color: isDarkMode ? '#334155' : '#e5eeff' }} }},
       y: {{ stacked: true, grid: {{ display: false }} }}
     }}
   }}
