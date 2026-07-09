@@ -547,7 +547,7 @@ body {{ background-color: #F8FAFC; }}
 <!-- Overview Tab -->
 <div id="tab-overview" class="tab-content">
 <!-- Stat Cards Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-md">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-md mb-lg">
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
     <div class="flex justify-between items-start">
       <span class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider">Input Tokens</span>
