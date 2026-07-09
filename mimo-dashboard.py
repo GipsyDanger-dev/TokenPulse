@@ -453,7 +453,14 @@ body {{ background-color: #F8FAFC; }}
       <span class="material-symbols-outlined text-[16px] mr-xs">calendar_today</span>
       {date_range}
     </div>
+    <div id="refresh-status" class="hidden md:flex items-center text-body-sm font-mono-data text-secondary bg-surface-container-low px-sm py-xs rounded border border-outline-variant">
+      <span class="material-symbols-outlined text-[16px] mr-xs animate-spin">refresh</span>
+      <span>Refreshing...</span>
+    </div>
     <div class="flex items-center gap-xs">
+      <button onclick="refreshData()" class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low" title="Refresh data">
+        <span class="material-symbols-outlined">refresh</span>
+      </button>
       <button class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low">
         <span class="material-symbols-outlined">notifications</span>
       </button>
@@ -714,7 +721,7 @@ body {{ background-color: #F8FAFC; }}
 </div>
 
 <footer class="bg-surface-container-lowest text-on-surface-variant font-mono-label text-mono-label border-t border-outline-variant flex justify-between items-center w-full px-lg py-md mt-margin">
-  <div>&copy; 2026 TokenPulse. Data from MiMo Code + 9Router</div>
+  <div>&copy; 2026 TokenPulse. Data from MiMo Code + 9Router | Last updated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
   <div class="flex gap-md">
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">Docs</span>
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">GitHub</span>
@@ -748,6 +755,31 @@ function switchTab(tabName) {{
   // Resize charts in the active tab
   setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
 }}
+
+// Auto-refresh configuration
+const AUTO_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+let refreshTimer = null;
+
+function refreshData() {{
+  const status = document.getElementById('refresh-status');
+  status.classList.remove('hidden');
+  status.classList.add('flex');
+  // Reload page after short delay to show the status
+  setTimeout(() => location.reload(), 500);
+}}
+
+function startAutoRefresh() {{
+  refreshTimer = setInterval(() => {{
+    refreshData();
+  }}, AUTO_REFRESH_INTERVAL);
+}}
+
+// Start auto-refresh on page load
+document.addEventListener('DOMContentLoaded', () => {{
+  startAutoRefresh();
+  // Show last updated time
+  console.log('TokenPulse auto-refresh enabled: every 5 minutes');
+}});
 
 const fmtTokens = (n) => {{
   if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';

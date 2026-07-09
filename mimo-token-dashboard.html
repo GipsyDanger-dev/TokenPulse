@@ -1,4 +1,4 @@
-nahn<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -156,7 +156,14 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-[16px] mr-xs">calendar_today</span>
       2026-05-19 - 2026-07-09
     </div>
+    <div id="refresh-status" class="hidden md:flex items-center text-body-sm font-mono-data text-secondary bg-surface-container-low px-sm py-xs rounded border border-outline-variant">
+      <span class="material-symbols-outlined text-[16px] mr-xs animate-spin">refresh</span>
+      <span>Refreshing...</span>
+    </div>
     <div class="flex items-center gap-xs">
+      <button onclick="refreshData()" class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low" title="Refresh data">
+        <span class="material-symbols-outlined">refresh</span>
+      </button>
       <button class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low">
         <span class="material-symbols-outlined">notifications</span>
       </button>
@@ -193,7 +200,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">output</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">882.9K</span>
+      <span class="font-stat-value text-stat-value text-primary">884.7K</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -202,7 +209,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">storage</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">246.6M</span>
+      <span class="font-stat-value text-stat-value text-primary">248.3M</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -211,7 +218,7 @@ body { background-color: #F8FAFC; }
       <span class="material-symbols-outlined text-on-surface-variant text-[20px]">forum</span>
     </div>
     <div class="mt-sm">
-      <span class="font-stat-value text-stat-value text-primary">1,853</span>
+      <span class="font-stat-value text-stat-value text-primary">1,863</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
@@ -323,10 +330,10 @@ body { background-color: #F8FAFC; }
         </tr>
         <tr class="bg-surface hover:bg-surface-container-low transition-colors">
             <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#004e5c"></div>mimo-auto</td>
-            <td class="p-sm text-right">275</td>
+            <td class="p-sm text-right">285</td>
             <td class="p-sm text-right">1.3M</td>
-            <td class="p-sm text-right">82.4K</td>
-            <td class="p-sm text-right">22.4M</td>
+            <td class="p-sm text-right">84.2K</td>
+            <td class="p-sm text-right">24.1M</td>
             <td class="p-sm text-right pr-md">$0.00</td>
         </tr>
         <tr class=" hover:bg-surface-container-low transition-colors">
@@ -516,11 +523,11 @@ body { background-color: #F8FAFC; }
         <tr class="bg-surface hover:bg-surface-container-low transition-colors">
             <td class="p-sm pl-md">#10</td>
             <td class="p-sm text-secondary" title="Greeting">Greeting</td>
-            <td class="p-sm text-right">107</td>
-            <td class="p-sm text-right">480.0K</td>
-            <td class="p-sm text-right">45.1K</td>
-            <td class="p-sm text-right">10.2M</td>
-            <td class="p-sm text-right pr-md">525.0K</td>
+            <td class="p-sm text-right">117</td>
+            <td class="p-sm text-right">516.6K</td>
+            <td class="p-sm text-right">46.9K</td>
+            <td class="p-sm text-right">11.9M</td>
+            <td class="p-sm text-right pr-md">563.5K</td>
         </tr>
         </tbody>
       </table>
@@ -576,10 +583,10 @@ body { background-color: #F8FAFC; }
         </tr>
         <tr class="bg-surface hover:bg-surface-container-low transition-colors">
             <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#004e5c"></div>mimo-auto</td>
-            <td class="p-sm text-right">275</td>
+            <td class="p-sm text-right">285</td>
             <td class="p-sm text-right">1.3M</td>
-            <td class="p-sm text-right">82.4K</td>
-            <td class="p-sm text-right">22.4M</td>
+            <td class="p-sm text-right">84.2K</td>
+            <td class="p-sm text-right">24.1M</td>
             <td class="p-sm text-right pr-md">$0.00</td>
         </tr>
         <tr class=" hover:bg-surface-container-low transition-colors">
@@ -710,9 +717,9 @@ body { background-color: #F8FAFC; }
         </tr>
         <tr class="bg-surface hover:bg-surface-container-low transition-colors">
             <td class="p-sm pl-md flex items-center gap-xs"><div class="w-2 h-2 rounded-full" style="background:#57dffe"></div>mimo</td>
-            <td class="p-sm text-right">275</td>
+            <td class="p-sm text-right">285</td>
             <td class="p-sm text-right">1.3M</td>
-            <td class="p-sm text-right">82.4K</td>
+            <td class="p-sm text-right">84.2K</td>
             <td class="p-sm text-right pr-md">$0.00</td>
         </tr>
         <tr class=" hover:bg-surface-container-low transition-colors">
@@ -860,11 +867,11 @@ body { background-color: #F8FAFC; }
         <tr class="bg-surface hover:bg-surface-container-low transition-colors">
             <td class="p-sm pl-md">#10</td>
             <td class="p-sm text-secondary" title="Greeting">Greeting</td>
-            <td class="p-sm text-right">107</td>
-            <td class="p-sm text-right">480.0K</td>
-            <td class="p-sm text-right">45.1K</td>
-            <td class="p-sm text-right">10.2M</td>
-            <td class="p-sm text-right pr-md">525.0K</td>
+            <td class="p-sm text-right">117</td>
+            <td class="p-sm text-right">516.6K</td>
+            <td class="p-sm text-right">46.9K</td>
+            <td class="p-sm text-right">11.9M</td>
+            <td class="p-sm text-right pr-md">563.5K</td>
         </tr>
         </tbody>
       </table>
@@ -875,7 +882,7 @@ body { background-color: #F8FAFC; }
 </div>
 
 <footer class="bg-surface-container-lowest text-on-surface-variant font-mono-label text-mono-label border-t border-outline-variant flex justify-between items-center w-full px-lg py-md mt-margin">
-  <div>&copy; 2026 TokenPulse. Data from MiMo Code + 9Router</div>
+  <div>&copy; 2026 TokenPulse. Data from MiMo Code + 9Router | Last updated: 2026-07-09 10:07:38</div>
   <div class="flex gap-md">
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">Docs</span>
     <span class="text-secondary cursor-pointer hover:text-primary transition-colors">GitHub</span>
@@ -910,6 +917,31 @@ function switchTab(tabName) {
   setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
 }
 
+// Auto-refresh configuration
+const AUTO_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+let refreshTimer = null;
+
+function refreshData() {
+  const status = document.getElementById('refresh-status');
+  status.classList.remove('hidden');
+  status.classList.add('flex');
+  // Reload page after short delay to show the status
+  setTimeout(() => location.reload(), 500);
+}
+
+function startAutoRefresh() {
+  refreshTimer = setInterval(() => {
+    refreshData();
+  }, AUTO_REFRESH_INTERVAL);
+}
+
+// Start auto-refresh on page load
+document.addEventListener('DOMContentLoaded', () => {
+  startAutoRefresh();
+  // Show last updated time
+  console.log('TokenPulse auto-refresh enabled: every 5 minutes');
+});
+
 const fmtTokens = (n) => {
   if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
   if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
@@ -926,9 +958,9 @@ new Chart(document.getElementById('dailyChart'), {
   data: {
     labels: ["2026-05-19", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09"],
     datasets: [
-      { label: 'Input', data: [5206, 113513, 203, 18713, 19550, 14253, 3468, 39074, 21138, 18096, 4287, 10251, 35274, 58151, 21590, 281954, 70299, 30964, 58047, 116485, 194945, 73159, 3510, 217, 54973, 367455, 312, 1362241, 76293, 22787, 163585, 1303919, 1108332, 30568, 242864, 888180, 590765, 558, 128886, 787381, 0, 1893791, 3090805, 2606083, 2743587, 35760, 1265026], borderColor: '#00687a', backgroundColor: 'rgba(0,104,122,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-      { label: 'Output', data: [3316, 18769, 105, 10659, 4524, 3692, 2244, 4101, 4703, 11525, 1823, 2487, 5261, 18103, 9684, 49555, 9999, 9883, 14010, 18931, 29663, 22740, 1944, 132, 43971, 34163, 113, 26074, 25991, 1802, 8085, 33460, 14374, 1418, 14945, 5860, 5806, 187, 15329, 11961, 0, 9019, 19770, 5427, 1386, 124, 82304], borderColor: '#57dffe', backgroundColor: 'rgba(87,223,254,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-      { label: 'Cache Read', data: [1063552, 5189696, 105216, 2256128, 1445376, 2182016, 549952, 2872448, 3062976, 4544576, 1102016, 1473856, 3857856, 10582464, 1758016, 6194688, 1085632, 788352, 3698944, 5026560, 7021568, 5399936, 268672, 85824, 10020672, 24336384, 434304, 4755776, 11302528, 1191424, 2427904, 27401280, 30210240, 290496, 7947648, 2236237, 362755, 29504, 10871232, 9180608, 0, 298259, 0, 0, 0, 84032, 22329664], borderColor: '#00275b', backgroundColor: 'rgba(0,39,91,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Input', data: [5206, 113513, 203, 18713, 19550, 14253, 3468, 39074, 21138, 18096, 4287, 10251, 35274, 58151, 21590, 281954, 70299, 30964, 58047, 116485, 194945, 73159, 3510, 217, 54973, 367455, 312, 1362241, 76293, 22787, 163585, 1303919, 1108332, 30568, 242864, 888180, 590765, 558, 128886, 787381, 0, 1893791, 3090805, 2606083, 2743587, 35760, 1301638], borderColor: '#00687a', backgroundColor: 'rgba(0,104,122,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Output', data: [3316, 18769, 105, 10659, 4524, 3692, 2244, 4101, 4703, 11525, 1823, 2487, 5261, 18103, 9684, 49555, 9999, 9883, 14010, 18931, 29663, 22740, 1944, 132, 43971, 34163, 113, 26074, 25991, 1802, 8085, 33460, 14374, 1418, 14945, 5860, 5806, 187, 15329, 11961, 0, 9019, 19770, 5427, 1386, 124, 84151], borderColor: '#57dffe', backgroundColor: 'rgba(87,223,254,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Cache Read', data: [1063552, 5189696, 105216, 2256128, 1445376, 2182016, 549952, 2872448, 3062976, 4544576, 1102016, 1473856, 3857856, 10582464, 1758016, 6194688, 1085632, 788352, 3698944, 5026560, 7021568, 5399936, 268672, 85824, 10020672, 24336384, 434304, 4755776, 11302528, 1191424, 2427904, 27401280, 30210240, 290496, 7947648, 2236237, 362755, 29504, 10871232, 9180608, 0, 298259, 0, 0, 0, 84032, 24017664], borderColor: '#00275b', backgroundColor: 'rgba(0,39,91,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
     ]
   },
   options: {
@@ -947,7 +979,7 @@ new Chart(document.getElementById('modelCountChart'), {
   type: 'doughnut',
   data: {
     labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5", "Other"],
-    datasets: [{ data: [1328, 73, 27, 275, 30, 120], backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }]
+    datasets: [{ data: [1328, 73, 27, 285, 30, 120], backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }]
   },
   options: {
     responsive: true,
@@ -961,7 +993,7 @@ new Chart(document.getElementById('modelChart'), {
   type: 'bar',
   data: {
     labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5", "glm-5.2", "claude-sonnet-4-6", "MiniMax-M2.7"],
-    datasets: [{ label: 'Tokens', data: [7363557, 6465423, 1938698, 1364181, 1207062, 700492, 649311, 480447], backgroundColor: '#00687a', borderRadius: 4, barThickness: 18 }]
+    datasets: [{ label: 'Tokens', data: [7363557, 6465423, 1938698, 1402640, 1207062, 700492, 649311, 480447], backgroundColor: '#00687a', borderRadius: 4, barThickness: 18 }]
   },
   options: {
     responsive: true,
@@ -979,7 +1011,7 @@ new Chart(document.getElementById('hourlyChart'), {
   type: 'bar',
   data: {
     labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
-    datasets: [{ label: 'Messages', data: [46, 64, 56, 24, 9, 33, 31, 25, 160, 193, 56, 43, 55, 108, 165, 107, 114, 34, 91, 73, 140, 85, 89, 52], backgroundColor: '#00687a', borderRadius: 4, barPercentage: 0.7 }]
+    datasets: [{ label: 'Messages', data: [46, 64, 56, 24, 9, 33, 31, 25, 160, 195, 64, 43, 55, 108, 165, 107, 114, 34, 91, 73, 140, 85, 89, 52], backgroundColor: '#00687a', borderRadius: 4, barPercentage: 0.7 }]
   },
   options: {
     responsive: true,
@@ -998,8 +1030,8 @@ new Chart(document.getElementById('modelDetailChart'), {
   data: {
     labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5", "glm-5.2", "claude-sonnet-4-6", "MiniMax-M2.7"],
     datasets: [
-      { label: 'Input', data: [6871418, 6436280, 1932587, 1281811, 1206191, 699812, 646881, 475667], backgroundColor: '#00687a', borderRadius: 4 },
-      { label: 'Output', data: [492139, 29143, 6111, 82370, 871, 680, 2430, 4780], backgroundColor: '#57dffe', borderRadius: 4 }
+      { label: 'Input', data: [6871418, 6436280, 1932587, 1318423, 1206191, 699812, 646881, 475667], backgroundColor: '#00687a', borderRadius: 4 },
+      { label: 'Output', data: [492139, 29143, 6111, 84217, 871, 680, 2430, 4780], backgroundColor: '#57dffe', borderRadius: 4 }
     ]
   },
   options: {
@@ -1019,7 +1051,7 @@ new Chart(document.getElementById('modelMessageChart'), {
   type: 'doughnut',
   data: {
     labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5", "Other"],
-    datasets: [{ data: [1328, 73, 27, 275, 30, 120], backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }]
+    datasets: [{ data: [1328, 73, 27, 285, 30, 120], backgroundColor: ['#00687a','#57dffe','#00275b','#dce9ff','#004e5c','#c5c6cd'], borderWidth: 2, borderColor: '#ffffff' }]
   },
   options: {
     responsive: true,
@@ -1035,8 +1067,8 @@ new Chart(document.getElementById('providerChart'), {
   data: {
     labels: ["anthropic", "mimo", "kiro", "qoder", "deepseek-ai", "openai-compatible-chat-d0132c05-1ccb-4c2f-b75f-3a65d95f1710"],
     datasets: [
-      { label: 'Input', data: [17409975, 1281811, 928209, 187823, 149705, 18975], backgroundColor: '#00687a', borderRadius: 4 },
-      { label: 'Output', data: [536315, 82370, 320, 104, 255, 58], backgroundColor: '#57dffe', borderRadius: 4 }
+      { label: 'Input', data: [17409975, 1318423, 928209, 187823, 149705, 18975], backgroundColor: '#00687a', borderRadius: 4 },
+      { label: 'Output', data: [536315, 84217, 320, 104, 255, 58], backgroundColor: '#57dffe', borderRadius: 4 }
     ]
   },
   options: {
