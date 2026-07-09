@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiMo Code - Token Usage Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3348;
+    --text: #e4e6f0;
+    --text-dim: #8b8fa3;
+    --accent: #6c5ce7;
+    --accent2: #00cec9;
+    --green: #00b894;
+    --orange: #fdcb6e;
+    --red: #e17055;
+    --blue: #74b9ff;
+    --pink: #fd79a8;
+    --purple: #a29bfe;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+}
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+.header .subtitle {
+    color: var(--text-dim);
+    font-size: 14px;
+}
+.header .refresh-time {
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-top: 4px;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+.stat-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+.stat-card .label {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.stat-card.accent .value { color: var(--accent); }
+.stat-card.green .value { color: var(--green); }
+.stat-card.blue .value { color: var(--blue); }
+.stat-card.orange .value { color: var(--orange); }
+.stat-card.pink .value { color: var(--pink); }
+.stat-card.purple .value { color: var(--purple); }
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+}
+.chart-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+.chart-card canvas {
+    max-height: 300px;
+}
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.tables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+}
+.table-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.model-badge {
+    background: var(--surface2);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-dim);
+    font-size: 12px;
+}
+@media (max-width: 768px) {
+    .charts-grid, .tables-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    body { padding: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+    <h1>MiMo Code Token Dashboard</h1>
+    <div class="subtitle">Monitoring penggunaan token dan biaya</div>
+    <div class="refresh-time">Generated: 2026-07-09 09:08:25 | Period: 2026-05-19 to 2026-07-09 (52 days)</div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card accent">
+        <div class="value">18.5M</div>
+        <div class="label">Input Tokens</div>
+    </div>
+    <div class="stat-card green">
+        <div class="value">574.5K</div>
+        <div class="label">Output Tokens</div>
+    </div>
+    <div class="stat-card blue">
+        <div class="value">225.9M</div>
+        <div class="label">Cache Read</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="value">157.8K</div>
+        <div class="label">Cache Write</div>
+    </div>
+    <div class="stat-card pink">
+        <div class="value">1,719</div>
+        <div class="label">Messages</div>
+    </div>
+    <div class="stat-card purple">
+        <div class="value">$0.00</div>
+        <div class="label">Total Cost</div>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-card full-width">
+        <h3>Daily Token Usage</h3>
+        <canvas id="dailyChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Token by Model</h3>
+        <canvas id="modelChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Messages by Model</h3>
+        <canvas id="modelCountChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Activity by Hour (UTC)</h3>
+        <canvas id="hourlyChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Activity by Day of Week</h3>
+        <canvas id="dowChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Token Usage by Agent</h3>
+        <canvas id="agentChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Messages by Agent</h3>
+        <canvas id="agentCountChart"></canvas>
+    </div>
+</div>
+
+<div class="tables-grid">
+    <div class="table-card full-width">
+        <h3>Model Breakdown</h3>
+        <table>
+            <thead>
+                <tr><th>Model</th><th>Messages</th><th>Input</th><th>Output</th><th>Cache Read</th><th>Cache Write</th><th>Total</th><th>Cost</th></tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td><span class="model-badge">mimo-v2.5-pro</span></td>
+            <td class="num">1328</td>
+            <td class="num">6.9M</td>
+            <td class="num">492.1K</td>
+            <td class="num">214.0M</td>
+            <td class="num">0</td>
+            <td class="num">7.4M</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">deepseek-v4-pro</span></td>
+            <td class="num">73</td>
+            <td class="num">6.4M</td>
+            <td class="num">29.1K</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">6.5M</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">claude-opus-4-6-thinking</span></td>
+            <td class="num">27</td>
+            <td class="num">1.9M</td>
+            <td class="num">6.1K</td>
+            <td class="num">399.8K</td>
+            <td class="num">0</td>
+            <td class="num">1.9M</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">mimo-auto</span></td>
+            <td class="num">161</td>
+            <td class="num">738.9K</td>
+            <td class="num">37.8K</td>
+            <td class="num">11.0M</td>
+            <td class="num">0</td>
+            <td class="num">776.7K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">glm-5.2</span></td>
+            <td class="num">10</td>
+            <td class="num">699.8K</td>
+            <td class="num">680</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">700.5K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">claude-sonnet-4-6</span></td>
+            <td class="num">11</td>
+            <td class="num">646.9K</td>
+            <td class="num">2.4K</td>
+            <td class="num">233.0K</td>
+            <td class="num">0</td>
+            <td class="num">649.3K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">MiniMax-M2.7</span></td>
+            <td class="num">19</td>
+            <td class="num">475.7K</td>
+            <td class="num">4.8K</td>
+            <td class="num">208.8K</td>
+            <td class="num">157.8K</td>
+            <td class="num">480.4K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">glm-5</span></td>
+            <td class="num">11</td>
+            <td class="num">278.0K</td>
+            <td class="num">551</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">278.5K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">qmodel_latest</span></td>
+            <td class="num">4</td>
+            <td class="num">187.8K</td>
+            <td class="num">104</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">187.9K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">deepseek-v4-pro-260425</span></td>
+            <td class="num">1</td>
+            <td class="num">111.8K</td>
+            <td class="num">304</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">112.1K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">deepseek-3.2</span></td>
+            <td class="num">2</td>
+            <td class="num">66.1K</td>
+            <td class="num">313</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">66.4K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge">claude-opus-4-8</span></td>
+            <td class="num">2</td>
+            <td class="num">41.2K</td>
+            <td class="num">119</td>
+            <td class="num">37.2K</td>
+            <td class="num">0</td>
+            <td class="num">41.3K</td>
+            <td class="num">$0.0000</td>
+        </tr>
+        <tr>
+            <td><span class="model-badge"><synthetic></span></td>
+            <td class="num">70</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">0</td>
+            <td class="num">$0.0000</td>
+        </tr></tbody>
+        </table>
+    </div>
+    <div class="table-card full-width">
+        <h3>Top Sessions</h3>
+        <table>
+            <thead>
+                <tr><th>Session</th><th>Messages</th><th>Input</th><th>Output</th><th>Cache Read</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+        <tr>
+            <td title="hai hipsy, bantu aku fix error di automation threads post di n8n ku dong">hai hipsy, bantu aku fix error di automation threads post di...</td>
+            <td class="num">66</td>
+            <td class="num">7.4M</td>
+            <td class="num">33.0K</td>
+            <td class="num">265.4K</td>
+            <td class="num">7.4M</td>
+        </tr>
+        <tr>
+            <td title="tolong installin ini di cmd ku https://github.com/Andyyyy64/whichllm">tolong installin ini di cmd ku https://github.com/Andyyyy64/...</td>
+            <td class="num">100</td>
+            <td class="num">2.3M</td>
+            <td class="num">37.6K</td>
+            <td class="num">48.7M</td>
+            <td class="num">2.3M</td>
+        </tr>
+        <tr>
+            <td title="cek">cek</td>
+            <td class="num">124</td>
+            <td class="num">1.2M</td>
+            <td class="num">30.7K</td>
+            <td class="num">13.3M</td>
+            <td class="num">1.2M</td>
+        </tr>
+        <tr>
+            <td title="hai">hai</td>
+            <td class="num">120</td>
+            <td class="num">1.0M</td>
+            <td class="num">23.6K</td>
+            <td class="num">9.6M</td>
+            <td class="num">1.0M</td>
+        </tr>
+        <tr>
+            <td title="hai ingat sesi ini sebagain develop game escape campus ya, baca project ku dan pelajari semuanya dul">hai ingat sesi ini sebagain develop game escape campus ya, b...</td>
+            <td class="num">72</td>
+            <td class="num">852.7K</td>
+            <td class="num">20.0K</td>
+            <td class="num">20.2M</td>
+            <td class="num">872.7K</td>
+        </tr>
+        <tr>
+            <td title="tolong dong cek workflow n8n ku">tolong dong cek workflow n8n ku</td>
+            <td class="num">38</td>
+            <td class="num">824.1K</td>
+            <td class="num">13.4K</td>
+            <td class="num">12.7M</td>
+            <td class="num">837.5K</td>
+        </tr>
+        <tr>
+            <td title="coba kases vps ku">coba kases vps ku</td>
+            <td class="num">97</td>
+            <td class="num">670.8K</td>
+            <td class="num">11.4K</td>
+            <td class="num">6.2M</td>
+            <td class="num">682.3K</td>
+        </tr>
+        <tr>
+            <td title="p">p</td>
+            <td class="num">12</td>
+            <td class="num">584.9K</td>
+            <td class="num">427</td>
+            <td class="num">0</td>
+            <td class="num">585.3K</td>
+        </tr>
+        <tr>
+            <td title="kamu sudah paham kan ini project apa?">kamu sudah paham kan ini project apa?</td>
+            <td class="num">173</td>
+            <td class="num">351.0K</td>
+            <td class="num">31.3K</td>
+            <td class="num">19.6M</td>
+            <td class="num">382.2K</td>
+        </tr>
+        <tr>
+            <td title="aku mau nambahin biar orang bisa download cv ku bagusnya ditaro di mana yah">aku mau nambahin biar orang bisa download cv ku bagusnya dit...</td>
+            <td class="num">9</td>
+            <td class="num">326.4K</td>
+            <td class="num">487</td>
+            <td class="num">0</td>
+            <td class="num">326.9K</td>
+        </tr>
+        <tr>
+            <td title="tolong gantiin ke branch front">tolong gantiin ke branch front</td>
+            <td class="num">182</td>
+            <td class="num">203.6K</td>
+            <td class="num">40.1K</td>
+            <td class="num">20.3M</td>
+            <td class="num">243.7K</td>
+        </tr>
+        <tr>
+            <td title="list semua fitur yang tersedia di setiap page lengkap dan data apa yang ditampilkan">list semua fitur yang tersedia di setiap page lengkap dan da...</td>
+            <td class="num">33</td>
+            <td class="num">222.3K</td>
+            <td class="num">21.3K</td>
+            <td class="num">3.2M</td>
+            <td class="num">243.6K</td>
+        </tr>
+        <tr>
+            <td title="checkpoint-writer: Previous checkpoint: C:\Users\lenovo\.local\share\mimocode\memory\sessions\ses_0bfe5c69affeAf92Oi22VCasQA\checkpoint.md
+Previous memory: C:\Users\lenovo\.local\share\mimocode\memory\projects\global\MEMORY.md
+Read BOTH the prior checkpoint (to dedupe Discovered/Dead-end titles AND to carry forward Live Resources, Execution-context frames, and Session-metadata fields that are still alive) AND the prior memory (project memory) before writing yours.">checkpoint-writer: Previous checkpoint: C:\Users\lenovo\.loc...</td>
+            <td class="num">41</td>
+            <td class="num">222.9K</td>
+            <td class="num">16.1K</td>
+            <td class="num">2.6M</td>
+            <td class="num">239.0K</td>
+        </tr>
+        <tr>
+            <td title="perbaiki bug di responsifitas web ini, di mobile pop up yang seharusnya muncul saat kita mengklik pr">perbaiki bug di responsifitas web ini, di mobile pop up yang...</td>
+            <td class="num">39</td>
+            <td class="num">228.4K</td>
+            <td class="num">7.4K</td>
+            <td class="num">8.4M</td>
+            <td class="num">235.9K</td>
+        </tr>
+        <tr>
+            <td title="aku mau kamu jawab pakai bahasa indonesia, Read and understand: - CLAUDE.md - docs/scope.md - docs/s">aku mau kamu jawab pakai bahasa indonesia, Read and understa...</td>
+            <td class="num">47</td>
+            <td class="num">174.0K</td>
+            <td class="num">56.6K</td>
+            <td class="num">5.4M</td>
+            <td class="num">230.6K</td>
+        </tr>
+        <tr>
+            <td title="# Instructions (read first) # OD core directives (read first — these override anything later in this"># Instructions (read first) # OD core directives (read first...</td>
+            <td class="num">15</td>
+            <td class="num">189.6K</td>
+            <td class="num">8.9K</td>
+            <td class="num">684.5K</td>
+            <td class="num">198.6K</td>
+        </tr>
+        <tr>
+            <td title="jalankan frontend dan backendnya">jalankan frontend dan backendnya</td>
+            <td class="num">28</td>
+            <td class="num">182.6K</td>
+            <td class="num">8.8K</td>
+            <td class="num">3.7M</td>
+            <td class="num">191.4K</td>
+        </tr>
+        <tr>
+            <td title="coba kamu cek simulator.py buat ngirim database nya ke database lokal mysql, nanti konfigursinya aku">coba kamu cek simulator.py buat ngirim database nya ke datab...</td>
+            <td class="num">84</td>
+            <td class="num">149.0K</td>
+            <td class="num">34.4K</td>
+            <td class="num">9.5M</td>
+            <td class="num">183.3K</td>
+        </tr>
+        <tr>
+            <td title="cek cek 123">cek cek 123</td>
+            <td class="num">3</td>
+            <td class="num">134.8K</td>
+            <td class="num">30</td>
+            <td class="num">0</td>
+            <td class="num">134.8K</td>
+        </tr>
+        <tr>
+            <td title="Greeting">Greeting</td>
+            <td class="num">27</td>
+            <td class="num">101.7K</td>
+            <td class="num">8.8K</td>
+            <td class="num">1.7M</td>
+            <td class="num">110.5K</td>
+        </tr></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="footer">
+    MiMo Code Token Dashboard | Data from C:\Users\lenovo/.local/share/mimocode/mimocode.db
+</div>
+
+<script>
+const chartDefaults = {
+    color: '#8b8fa3',
+    borderColor: '#2e3348',
+};
+Chart.defaults.color = chartDefaults.color;
+Chart.defaults.borderColor = chartDefaults.borderColor;
+
+// Daily Chart
+new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
+    data: {
+        labels: ["2026-05-19", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20", "2026-06-21", "2026-06-25", "2026-06-26", "2026-06-27", "2026-06-28", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-08", "2026-07-09"],
+        datasets: [
+            { label: 'Input', data: [5206, 113513, 203, 18713, 19550, 14253, 3468, 39074, 21138, 18096, 4287, 10251, 35274, 58151, 21590, 281954, 70299, 30964, 58047, 116485, 194945, 73159, 3510, 217, 54973, 367455, 312, 1362241, 76293, 22787, 163585, 1303919, 1108332, 30568, 242864, 888180, 590765, 558, 128886, 787381, 0, 1893791, 3090805, 2606083, 1815378, 35760, 703163], borderColor: '#6c5ce7', backgroundColor: 'rgba(108,92,231,0.1)', fill: true, tension: 0.3 },
+            { label: 'Output', data: [3316, 18769, 105, 10659, 4524, 3692, 2244, 4101, 4703, 11525, 1823, 2487, 5261, 18103, 9684, 49555, 9999, 9883, 14010, 18931, 29663, 22740, 1944, 132, 43971, 34163, 113, 26074, 25991, 1802, 8085, 33460, 14374, 1418, 14945, 5860, 5806, 187, 15329, 11961, 0, 9019, 19770, 5427, 1066, 124, 37665], borderColor: '#00cec9', backgroundColor: 'rgba(0,206,201,0.1)', fill: true, tension: 0.3 },
+            { label: 'Cache Read', data: [1063552, 5189696, 105216, 2256128, 1445376, 2182016, 549952, 2872448, 3062976, 4544576, 1102016, 1473856, 3857856, 10582464, 1758016, 6194688, 1085632, 788352, 3698944, 5026560, 7021568, 5399936, 268672, 85824, 10020672, 24336384, 434304, 4755776, 11302528, 1191424, 2427904, 27401280, 30210240, 290496, 7947648, 2236237, 362755, 29504, 10871232, 9180608, 0, 298259, 0, 0, 0, 84032, 10869056], borderColor: '#74b9ff', backgroundColor: 'rgba(116,185,255,0.1)', fill: true, tension: 0.3 },
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { position: 'top' } },
+        scales: {
+            y: { ticks: { callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v } }
+        }
+    }
+});
+
+// Model Token Chart
+new Chart(document.getElementById('modelChart'), {
+    type: 'bar',
+    data: {
+        labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5.2", "claude-sonnet-4-6", "MiniMax-M2.7", "glm-5", "qmodel_latest", "deepseek-v4-pro-260425", "deepseek-3.2", "claude-opus-4-8", "<synthetic>"],
+        datasets: [
+            { label: 'Input', data: [6871418, 6436280, 1932587, 738923, 699812, 646881, 475667, 277982, 187823, 111768, 66088, 41197, 0], backgroundColor: '#6c5ce7' },
+            { label: 'Output', data: [492139, 29143, 6111, 37789, 680, 2430, 4780, 551, 104, 304, 313, 119, 0], backgroundColor: '#00cec9' },
+            { label: 'Cache Read', data: [214034816, 0, 399756, 10953088, 0, 233035, 208757, 0, 0, 0, 0, 37207, 0], backgroundColor: '#74b9ff' },
+        ]
+    },
+    options: {
+        responsive: true,
+        indexAxis: 'y',
+        plugins: { legend: { position: 'top' } },
+        scales: {
+            x: { stacked: true, ticks: { callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v } },
+            y: { stacked: true }
+        }
+    }
+});
+
+// Model Count Chart
+new Chart(document.getElementById('modelCountChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["mimo-v2.5-pro", "deepseek-v4-pro", "claude-opus-4-6-thinking", "mimo-auto", "glm-5.2", "claude-sonnet-4-6", "MiniMax-M2.7", "glm-5", "qmodel_latest", "deepseek-v4-pro-260425", "deepseek-3.2", "claude-opus-4-8", "<synthetic>"],
+        datasets: [{ data: [1328, 73, 27, 161, 10, 11, 19, 11, 4, 1, 2, 2, 70], backgroundColor: ['#6c5ce7','#00cec9','#00b894','#fdcb6e','#e17055','#74b9ff','#fd79a8','#a29bfe','#55efc4','#fab1a0','#81ecec','#dfe6e9','#636e72','#b2bec3','#ffeaa7'] }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'right', labels: { boxWidth: 12, padding: 8 } }
+        }
+    }
+});
+
+// Hourly Chart
+new Chart(document.getElementById('hourlyChart'), {
+    type: 'bar',
+    data: {
+        labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],
+        datasets: [
+            { label: 'Messages', data: [46, 64, 55, 24, 9, 33, 31, 25, 160, 79, 56, 43, 55, 108, 146, 107, 114, 34, 91, 73, 140, 85, 89, 52], backgroundColor: 'rgba(108,92,231,0.6)', yAxisID: 'y' },
+            { label: 'Tokens', data: [220650, 152204, 293570, 21771, 9234, 1138779, 77213, 37727, 2322376, 1128360, 1154912, 35173, 880439, 1656505, 1383337, 498521, 383975, 246218, 256065, 175465, 372815, 779332, 2264334, 3571914], type: 'line', borderColor: '#00cec9', yAxisID: 'y1', tension: 0.3, pointRadius: 3 }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+            y: { position: 'left', title: { display: true, text: 'Messages' } },
+            y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Tokens' }, ticks: { callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v } }
+        }
+    }
+});
+
+// Day of Week Chart
+new Chart(document.getElementById('dowChart'), {
+    type: 'bar',
+    data: {
+        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        datasets: [
+            { label: 'Messages', data: [129, 274, 227, 360, 134, 265, 330], backgroundColor: 'rgba(0,184,148,0.6)', yAxisID: 'y' },
+            { label: 'Tokens', data: [2805831, 3520600, 452731, 2091831, 540055, 4309502, 5340339], type: 'line', borderColor: '#fd79a8', yAxisID: 'y1', tension: 0.3, pointRadius: 4 }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'top' } },
+        scales: {
+            y: { position: 'left', title: { display: true, text: 'Messages' } },
+            y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Tokens' }, ticks: { callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v } }
+        }
+    }
+});
+
+// Agent Token Chart
+new Chart(document.getElementById('agentChart'), {
+    type: 'bar',
+    data: {
+        labels: ["main", "checkpoint-writer-1", "build-1"],
+        datasets: [{ label: 'Tokens', data: [18772173, 286826, 1890], backgroundColor: ['#6c5ce7','#00cec9','#00b894','#fdcb6e','#e17055','#74b9ff','#fd79a8','#a29bfe','#55efc4','#fab1a0','#81ecec','#dfe6e9','#636e72','#b2bec3','#ffeaa7'] }]
+    },
+    options: {
+        responsive: true,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { ticks: { callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(1)+'K' : v } }
+        }
+    }
+});
+
+// Agent Count Chart
+new Chart(document.getElementById('agentCountChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ["main", "checkpoint-writer-1", "build-1"],
+        datasets: [{ data: [1671, 47, 1], backgroundColor: ['#6c5ce7','#00cec9','#00b894','#fdcb6e','#e17055','#74b9ff','#fd79a8','#a29bfe','#55efc4','#fab1a0','#81ecec','#dfe6e9','#636e72','#b2bec3','#ffeaa7'] }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'right', labels: { boxWidth: 12, padding: 8 } }
+        }
+    }
+});
+</script>
+</body>
+</html>
