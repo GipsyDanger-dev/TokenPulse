@@ -185,6 +185,7 @@ def generate_html(messages, daily, model, hourly, provider, session, router_stat
     total_cache_read = sum(m["cache_read"] for m in messages)
     total_cost = sum(m["cost"] for m in messages)
     total_messages = len(messages)
+    total_requests = total_messages
     avg_tokens = (total_input + total_output) // total_messages if total_messages else 0
 
     # Add 9Router aggregated totals (not just recent requests)
@@ -193,6 +194,7 @@ def generate_html(messages, daily, model, hourly, provider, session, router_stat
         total_output += router_stats.get("totalCompletionTokens", 0)
         total_cache_read += router_stats.get("totalCachedTokens", 0)
         total_cost += router_stats.get("totalCost", 0)
+        total_requests += router_stats.get("totalRequests", 0)
 
     dates = sorted(daily.keys())
     if dates:
@@ -545,7 +547,7 @@ body {{ background-color: #F8FAFC; }}
 <!-- Overview Tab -->
 <div id="tab-overview" class="tab-content">
 <!-- Stat Cards Grid -->
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-md">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-md">
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
     <div class="flex justify-between items-start">
       <span class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider">Input Tokens</span>
@@ -580,6 +582,15 @@ body {{ background-color: #F8FAFC; }}
     </div>
     <div class="mt-sm">
       <span class="font-stat-value text-stat-value text-primary">{total_messages:,}</span>
+    </div>
+  </div>
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
+    <div class="flex justify-between items-start">
+      <span class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-wider">Total Requests</span>
+      <span class="material-symbols-outlined text-on-surface-variant text-[20px]">api</span>
+    </div>
+    <div class="mt-sm">
+      <span class="font-stat-value text-stat-value text-primary">{total_requests:,}</span>
     </div>
   </div>
   <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex flex-col justify-between">
