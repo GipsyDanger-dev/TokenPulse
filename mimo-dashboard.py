@@ -449,7 +449,7 @@ body {{ background-color: #F8FAFC; }}
 <body class="font-body-md text-body-md text-on-surface bg-background flex h-screen overflow-hidden">
 
 <!-- SideNavBar -->
-<nav class="bg-surface-container-lowest text-primary h-screen w-64 border-r border-outline-variant flex-shrink-0 flex flex-col z-50 relative hidden md:flex">
+<nav id="sidebar" class="bg-surface-container-lowest text-primary h-screen w-64 border-r border-outline-variant flex-shrink-0 flex flex-col z-50 relative hidden md:flex transition-all duration-300">
 <div class="flex flex-col h-full p-lg gap-md">
   <div class="mb-lg">
     <div class="flex items-center gap-sm mb-xs">
@@ -487,7 +487,7 @@ body {{ background-color: #F8FAFC; }}
 <!-- TopNavBar -->
 <header class="bg-surface text-primary border-b border-outline-variant flex justify-between items-center w-full px-lg h-16 sticky top-0 z-40 flex-shrink-0">
   <div class="flex items-center gap-md">
-    <button class="md:hidden text-on-surface-variant hover:text-primary transition-colors">
+    <button onclick="toggleSidebar()" class="text-on-surface-variant hover:text-primary transition-colors">
       <span class="material-symbols-outlined">menu</span>
     </button>
     <div class="font-headline-md text-headline-md font-bold text-primary">TokenPulse Dashboard</div>
@@ -793,6 +793,32 @@ function switchTab(tabName) {{
   // Resize charts in the active tab
   setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
 }}
+
+// Sidebar toggle
+function toggleSidebar() {{
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.querySelector('.main-content');
+  sidebar.classList.toggle('hidden');
+  sidebar.classList.toggle('md:hidden');
+  sidebar.classList.toggle('md:block');
+  sidebar.classList.toggle('fixed');
+  sidebar.classList.toggle('top-16');
+  sidebar.classList.toggle('left-0');
+  sidebar.classList.toggle('h-[calc(100vh-4rem)]');
+  // Save preference
+  const isHidden = sidebar.classList.contains('hidden');
+  localStorage.setItem('sidebarHidden', isHidden);
+}}
+
+// Load sidebar preference
+(function() {{
+  const isHidden = localStorage.getItem('sidebarHidden') === 'true';
+  if (isHidden) {{
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.add('hidden');
+    sidebar.classList.remove('md:flex');
+  }}
+}})();
 
 // Dark mode
 function toggleDarkMode() {{
