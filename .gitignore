@@ -21,3 +21,8 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+
+# Playwright
+.playwright-mcp/
+test-results/
+playwright-report/
