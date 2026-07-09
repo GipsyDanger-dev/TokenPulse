@@ -444,6 +444,32 @@ body {{ background-color: #F8FAFC; }}
 .dark .bg-background, body.dark .bg-background {{
   background-color: #0f172a !important;
 }}
+/* Chart dark mode fixes */
+.dark canvas, body.dark canvas {{
+  background-color: transparent !important;
+}}
+/* Table dark mode */
+.dark tbody tr, body.dark tbody tr {{
+  border-color: #334155 !important;
+}}
+.dark tbody tr:nth-child(even), body.dark tbody tr:nth-child(even) {{
+  background-color: #1e293b !important;
+}}
+.dark tbody tr:hover, body.dark tbody tr:hover {{
+  background-color: #334155 !important;
+}}
+.dark th, body.dark th {{
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}}
+.dark td, body.dark td {{
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}}
+.dark .text-secondary, body.dark .text-secondary {{
+  color: #22d3ee !important;
+}}
 </style>
 </head>
 <body class="font-body-md text-body-md text-on-surface bg-background flex h-screen overflow-hidden">
@@ -829,6 +855,7 @@ function toggleDarkMode() {{
   const icon = document.getElementById('theme-icon');
   icon.textContent = isDark ? 'light_mode' : 'dark_mode';
   // Update chart colors
+  updateChartColors();
   setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
 }}
 
@@ -878,6 +905,24 @@ Chart.defaults.color = '#45474c';
 Chart.defaults.borderColor = '#e5eeff';
 Chart.defaults.font.family = "'JetBrains Mono', monospace";
 Chart.defaults.font.size = 11;
+
+// Update chart colors for dark mode
+function updateChartColors() {{
+  const isDark = document.documentElement.classList.contains('dark');
+  Chart.defaults.color = isDark ? '#94a3b8' : '#45474c';
+  Chart.defaults.borderColor = isDark ? '#334155' : '#e5eeff';
+  // Update all existing charts
+  Chart.instances && Object.values(Chart.instances).forEach(chart => {{
+    chart.options.scales && Object.values(chart.options.scales).forEach(scale => {{
+      if (scale.ticks) scale.ticks.color = isDark ? '#94a3b8' : '#45474c';
+      if (scale.grid) scale.grid.color = isDark ? '#334155' : '#e5eeff';
+    }});
+    chart.update();
+  }});
+}}
+
+// Initial chart color update
+updateChartColors();
 
 new Chart(document.getElementById('dailyChart'), {{
   type: 'line',
