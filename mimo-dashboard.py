@@ -400,6 +400,50 @@ tailwind.config = {{
 </script>
 <style>
 body {{ background-color: #F8FAFC; }}
+.dark body, body.dark {{
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}}
+.dark .bg-surface-container-lowest, body.dark .bg-surface-container-lowest {{
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}}
+.dark .bg-surface-container-low, body.dark .bg-surface-container-low {{
+  background-color: #1e293b !important;
+}}
+.dark .bg-surface, body.dark .bg-surface {{
+  background-color: #0f172a !important;
+}}
+.dark .bg-surface-container, body.dark .bg-surface-container {{
+  background-color: #1e293b !important;
+}}
+.dark .bg-surface-container-high, body.dark .bg-surface-container-high {{
+  background-color: #334155 !important;
+}}
+.dark .bg-surface-container-highest, body.dark .bg-surface-container-highest {{
+  background-color: #475569 !important;
+}}
+.dark .text-primary, body.dark .text-primary {{
+  color: #e2e8f0 !important;
+}}
+.dark .text-on-surface, body.dark .text-on-surface {{
+  color: #e2e8f0 !important;
+}}
+.dark .text-on-surface-variant, body.dark .text-on-surface-variant {{
+  color: #94a3b8 !important;
+}}
+.dark .text-on-secondary-container, body.dark .text-on-secondary-container {{
+  color: #e2e8f0 !important;
+}}
+.dark .border-outline-variant, body.dark .border-outline-variant {{
+  border-color: #334155 !important;
+}}
+.dark .bg-secondary-container, body.dark .bg-secondary-container {{
+  background-color: #0e7490 !important;
+}}
+.dark .bg-background, body.dark .bg-background {{
+  background-color: #0f172a !important;
+}}
 </style>
 </head>
 <body class="font-body-md text-body-md text-on-surface bg-background flex h-screen overflow-hidden">
@@ -461,15 +505,9 @@ body {{ background-color: #F8FAFC; }}
       <button onclick="refreshData()" class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low" title="Refresh data">
         <span class="material-symbols-outlined">refresh</span>
       </button>
-      <button class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low">
-        <span class="material-symbols-outlined">notifications</span>
+      <button onclick="toggleDarkMode()" class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low" title="Toggle dark mode">
+        <span id="theme-icon" class="material-symbols-outlined">dark_mode</span>
       </button>
-      <button class="p-xs text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low">
-        <span class="material-symbols-outlined">settings</span>
-      </button>
-    </div>
-    <div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant ml-sm flex items-center justify-center">
-      <span class="material-symbols-outlined text-on-surface-variant text-[18px]">person</span>
     </div>
   </div>
 </header>
@@ -755,6 +793,29 @@ function switchTab(tabName) {{
   // Resize charts in the active tab
   setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
 }}
+
+// Dark mode
+function toggleDarkMode() {{
+  document.documentElement.classList.toggle('dark');
+  document.body.classList.toggle('dark');
+  const isDark = document.documentElement.classList.contains('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  const icon = document.getElementById('theme-icon');
+  icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+  // Update chart colors
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+}}
+
+// Load saved theme
+(function() {{
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {{
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+    const icon = document.getElementById('theme-icon');
+    if (icon) icon.textContent = 'light_mode';
+  }}
+}})();
 
 // Auto-refresh configuration
 const AUTO_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
