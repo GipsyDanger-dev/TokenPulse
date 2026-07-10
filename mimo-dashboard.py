@@ -889,8 +889,47 @@ function refreshData() {{
   const status = document.getElementById('refresh-status');
   status.classList.remove('hidden');
   status.classList.add('flex');
-  // Reload page after short delay to show the status
-  setTimeout(() => location.reload(), 500);
+  // Check if running on server
+  if (window.location.port === '8080') {{
+    fetchLiveData();
+  }} else {{
+    setTimeout(() => location.reload(), 500);
+  }}
+}}
+
+async function fetchLiveData() {{
+  try {{
+    const resp = await fetch('/api/data');
+    const data = await resp.json();
+    updateDashboard(data);
+    document.getElementById('refresh-status').classList.add('hidden');
+    document.getElementById('refresh-status').classList.remove('flex');
+  }} catch (e) {{
+    console.error('Failed to fetch live data:', e);
+    document.getElementById('refresh-status').classList.add('hidden');
+  }}
+}}
+
+function updateDashboard(data) {{
+  const t = data.totals;
+  // Update stat cards
+  const cards = document.querySelectorAll('.tab-content:not(.hidden) .stat-value, #tab-overview .stat-value');
+  if (cards.length >= 7) {{
+    cards[0].textContent = fmtTokens(t.input);
+    cards[1].textContent = fmtTokens(t.output);
+    cards[2].textContent = fmtTokens(t.cache_read);
+    cards[3].textContent = t.messages.toLocaleString();
+    cards[4].textContent = t.requests.toLocaleString();
+    cards[5].textContent = '$' + t.cost.toFixed(2);
+    cards[6].textContent = t.messages > 0 ? fmtTokens(Math.floor((t.input + t.output) / t.messages)) : '0';
+  }}
+  // Update timestamp
+  const ts = document.querySelector('.refresh-time');
+  if (ts) ts.textContent = 'Last updated: ' + data.updated_at;
+  // Update charts if they exist
+  if (window.Chart && Chart.instances) {{
+    Object.values(Chart.instances).forEach(chart => chart.update());
+  }}
 }}
 
 function startAutoRefresh() {{
@@ -902,7 +941,10 @@ function startAutoRefresh() {{
 // Start auto-refresh on page load
 document.addEventListener('DOMContentLoaded', () => {{
   startAutoRefresh();
-  // Show last updated time
+  // Try to fetch live data immediately if on server
+  if (window.location.port === '8080') {{
+    fetchLiveData();
+  }}
   console.log('TokenPulse auto-refresh enabled: every 5 minutes');
 }});
 
