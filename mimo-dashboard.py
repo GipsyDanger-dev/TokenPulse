@@ -446,6 +446,10 @@ body {{ background-color: #F8FAFC; }}
 .dark .bg-background, body.dark .bg-background {{
   background-color: #0f172a !important;
 }}
+/* Ensure hidden class works */
+#refresh-status.hidden {{
+  display: none !important;
+}}
 /* Chart dark mode fixes */
 .dark canvas, body.dark canvas {{
   background-color: transparent !important;
@@ -888,13 +892,16 @@ let refreshTimer = null;
 function refreshData() {{
   const status = document.getElementById('refresh-status');
   status.classList.remove('hidden');
-  status.classList.add('flex');
   // Check if running on server
   if (window.location.port === '8080') {{
     fetchLiveData();
   }} else {{
     setTimeout(() => location.reload(), 500);
   }}
+  // Auto-hide status after 3 seconds even if fetch fails
+  setTimeout(() => {{
+    status.classList.add('hidden');
+  }}, 3000);
 }}
 
 async function fetchLiveData() {{
@@ -902,10 +909,9 @@ async function fetchLiveData() {{
     const resp = await fetch('/api/data');
     const data = await resp.json();
     updateDashboard(data);
-    document.getElementById('refresh-status').classList.add('hidden');
-    document.getElementById('refresh-status').classList.remove('flex');
   }} catch (e) {{
     console.error('Failed to fetch live data:', e);
+  }} finally {{
     document.getElementById('refresh-status').classList.add('hidden');
   }}
 }}
